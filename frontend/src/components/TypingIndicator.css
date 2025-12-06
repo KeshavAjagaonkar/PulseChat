@@ -1,0 +1,53 @@
+/* TypingIndicator.css */
+
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  /* Use the same accent color for visibility */
+  color: var(--accent-color); 
+  font-size: 13px;
+  margin-top: 4px; /* Align with the style of the old 'Online' status */
+}
+
+.typing-indicator span {
+  margin-right: 6px;
+  font-weight: 500;
+}
+
+/* The Dots Container */
+.typing-dots {
+  display: flex;
+  align-items: center;
+  height: 10px; /* Space for the dots to bounce */
+  margin-left: 2px;
+}
+
+/* The Individual Dots */
+.dot {
+  width: 6px;
+  height: 6px;
+  margin: 0 2px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  opacity: 0.7;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+/* Delay the animation for each dot */
+.dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+/* Keyframe animation for the bouncing effect */
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0); /* Invisible at start/end */
+  }
+  40% {
+    transform: scale(1); /* Full size in the middle */
+  }
+}

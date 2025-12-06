@@ -1,0 +1,52 @@
+/* --- GLOBAL VARIABLES & RESET --- */
+:root {
+  /* Theme Colors (Professional Clean) */
+  --bg-base: #121212;             
+  --bg-glass: rgba(40, 40, 40, 0.7); 
+  --bg-glass-hover: rgba(60, 60, 60, 0.8);
+  --accent-color: #3b82f6;        
+  --text-primary: #e0e0e0;
+  --text-secondary: #a0a0a0;
+  
+  --border-subtle: 1px solid rgba(255, 255, 255, 0.08);
+  --radius-lg: 12px;
+  --radius-circle: 50%;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+/* Main Shell Layout */
+.main-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-image: radial-gradient(circle at 10% 20%, rgba(20, 20, 20, 1) 0%, rgba(0, 0, 0, 1) 90%);
+}
+
+/* Global Icon Button Utility (Used in both components) */
+.icon-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon-btn:hover {
+  background-color: rgba(255,255,255,0.1);
+  color: var(--text-primary);
+}

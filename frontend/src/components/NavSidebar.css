@@ -1,0 +1,84 @@
+/* Nav Sidebar Container */
+.nav-sidebar {
+  width: 70px; /* Fixed, narrow width */
+  min-width: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Pushes settings to the bottom */
+  align-items: center;
+  padding: 20px 0;
+  background-color: rgba(10, 10, 10, 0.9); /* Darker than the search sidebar */
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* App Logo Placeholder */
+.app-logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--accent-color);
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+}
+
+/* Navigation Links Container */
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Space between icons */
+}
+
+/* Individual Navigation Item */
+.nav-item {
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* Active State */
+.nav-item.active {
+  background-color: var(--accent-color);
+  color: white;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4);
+}
+
+.nav-bottom {
+  margin-top: auto; /* Pushes content to the bottom */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* User Profile Placeholder */
+.user-profile-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #00d2ff, #3a7bd5); /* Placeholder gradient */
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.user-profile-icon:hover {
+  transform: scale(1.05);
+}
+@media (max-width: 768px) {
+  .nav-sidebar {
+    display: none;
+  }
+}

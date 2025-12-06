@@ -1,0 +1,189 @@
+/* --- LAYOUT --- */
+.chat-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: transparent; /* Allows main gradient to show */
+  position: relative;
+}
+
+/* --- HEADER --- */
+/* --- HEADER FIX --- */
+.chat-header {
+  /* 1. HEIGHT MATCHING: Set exact height to match sidebar */
+  height: 80px; 
+  min-height: 80px; /* Forces it to never shrink */
+  
+  /* 2. ALIGNMENT: Flexbox centering */
+  display: flex;
+  align-items: center;       /* Vertical Center */
+  justify-content: space-between; /* Spacing */
+  
+  padding: 0 25px;
+  background-color: rgba(20, 20, 20, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.chat-header-info h3 { 
+  font-size: 16px; 
+  margin: 0 0 4px 0; /* Remove default margins that push text off-center */
+  color: var(--text-primary); 
+}
+
+/* Fix the Icons Container */
+.chat-actions {
+  display: flex;
+  align-items: center; /* Vertically center the buttons */
+  gap: 10px;           /* Consistent space between icons */
+  height: 100%;        /* Take full height of header */
+}
+
+/* Ensure buttons themselves are centered */
+.chat-actions .icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+}
+
+/* --- MESSAGES LIST --- */
+.messages-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+/* Scrollbar Polish */
+.messages-container::-webkit-scrollbar { width: 6px; }
+.messages-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+
+/* --- MESSAGE BUBBLES --- */
+.message {
+  max-width: 65%;
+  min-width: 120px; /* Ensures enough space for short texts */
+  
+  /* CRITICAL: Right padding (40px) makes space for the menu button */
+  padding: 12px 40px 12px 16px; 
+  
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  position: relative; /* Anchor for absolute button */
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Show menu trigger only on hover */
+.message:hover .menu-trigger {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.message.received {
+  align-self: flex-start;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-top-left-radius: 4px;
+  color: #e0e0e0;
+}
+
+.message.sent {
+  align-self: flex-end;
+  background-color: var(--accent-color); /* Uses your global blue */
+  color: white;
+  border-top-right-radius: 4px;
+}
+
+.message-time {
+  font-size: 11px;
+  opacity: 0.6;
+  margin-top: 4px;
+  text-align: right;
+  font-weight: 500;
+}
+
+/* --- INPUT AREA --- */
+.chat-input-area {
+  padding: 20px;
+  background-color: rgba(20, 20, 20, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chat-input-area input {
+  flex: 1;
+  padding: 14px 20px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.05);
+  color: white;
+  outline: none;
+  font-size: 14px;
+  transition: 0.2s;
+}
+.chat-input-area input:focus {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent-color);
+}
+.icon-btn {
+    color: rgba(255, 255, 255, 0.6);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s, background-color 0.2s;
+    /* Ensure input area buttons have a base size like header buttons */
+    height: 40px; 
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; /* Prevents shrinking in the flex layout */
+}
+
+.icon-btn:hover {
+    color: white; /* Bright white on hover */
+    background-color: rgba(255, 255, 255, 0.15); /* Subtle background highlight */
+    border-radius: 50%; /* Makes the hover area a circle */
+}
+
+/* Specific styling for the Send button (Paper Plane) */
+.send-btn {
+    background-color: var(--accent-color); /* Uses the app's accent color */
+    color: white !important; /* Force white icon color */
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+    /* Override general hover to create a press effect */
+}
+
+.send-btn:hover {
+    background-color: #3174d8; /* Slightly darker blue on hover */
+    box-shadow: 0 2px 5px rgba(59, 130, 246, 0.6);
+    transform: translateY(1px); /* Little downward shift for 'press' feel */
+}
+@media (max-width: 768px) {
+  .chat-window {
+    /* Takes up 100% of the screen width on mobile */
+    width: 100%;
+    min-width: 100%;
+    flex: 1 1 100%; 
+  }
+  
+  /* Increase message bubble size for mobile readability */
+  .message {
+    max-width: 85%; 
+  }
+  
+  /* Collapse the input field padding slightly */
+  .chat-input-area {
+    padding: 15px 12px;
+  }
+  
+  .chat-input-area input {
+    padding: 10px 15px;
+  }
+}
