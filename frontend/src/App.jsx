@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css'
 
@@ -7,16 +7,26 @@ import Register from './pages/Register';
 import HomeLayout from './pages/HomeLayout'; 
 
 const App = () => {
-  // 1. STATE: Manage authentication status here
-  // Default to false so we see the Login screen first
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  // FIX 1: Initialize state based on localStorage presence
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    const userInfo = localStorage.getItem("userInfo");
+    return userInfo ? true : false;
+  });
 
-  // Helper function to simulate logging in
+  // FIX 2: Ensure state stays in sync on load
+  useEffect(() => {
+    const userInfo = localStorage.getItem("userInfo");
+    if (userInfo) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, []);
+
   const handleLogin = () => {
     setIsAuthenticated(true);
   };
 
-  // 2. PROTECTED ROUTE WRAPPER
   const ProtectedRoute = ({ children }) => {
     if (!isAuthenticated) {
       return <Navigate to="/login" replace />;
@@ -26,9 +36,7 @@ const App = () => {
   
   return (
       <Routes>
-        {/* Pass handleLogin to the Login page */}
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
-        
         <Route path="/register" element={<Register />} />
         
         {/* Protected Home Route */}
@@ -41,10 +49,8 @@ const App = () => {
           } 
         />
         
-        {/* Catch-all */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    
   );
 };
 

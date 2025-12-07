@@ -77,6 +77,7 @@ const ChatWindow = () => {
     try {
       setLoading(true);
       const { data } = await axios.get(`/api/message/${selectedChat._id}`);
+      console.log(data);
       setMessages(data);
       setLoading(false);
       socket.emit("join chat", selectedChat._id);
@@ -88,6 +89,10 @@ const ChatWindow = () => {
 
   const sendMessage = async () => {
     // 1. Capture the message text in a local variable immediately
+    if (!selectedChat || !selectedChat._id) {
+        console.error("Cannot send message: Selected Chat is invalid", selectedChat);
+        return;
+    }
     const messageContent = newMessage;
 
     if (messageContent.trim() !== '') {
@@ -98,7 +103,7 @@ const ChatWindow = () => {
         // 3. DEBUG: Print exactly what we are sending
         console.log("Attempting to send:", {
             content: messageContent,
-            chatId: selectedChat?._id // Use optional chaining to see if ID is missing
+            chatId: selectedChat._id // Use optional chaining to see if ID is missing
         });
 
         // 4. Send the request using the LOCAL variable, not the state

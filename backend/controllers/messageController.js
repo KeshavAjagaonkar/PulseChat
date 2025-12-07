@@ -7,15 +7,6 @@ import Chat from "../models/chatModel.js";
 const sendMessage = async (req, res) => {
   const { content, chatId } = req.body;
 
-  // --- DEBUG LOGS START ---
-  console.log("---------------- BACKEND DEBUG ----------------");
-  console.log("1. Incoming Request Body:", req.body);
-  console.log("2. Content:", content);
-  console.log("3. Chat ID:", chatId);
-  console.log("4. User (from token):", req.user ? req.user._id : "UNDEFINED - Auth Failed");
-  console.log("-----------------------------------------------");
-  // --- DEBUG LOGS END ---
-
   if (!content || !chatId) {
     console.log("ERROR: Invalid data passed into request");
     return res.sendStatus(400);

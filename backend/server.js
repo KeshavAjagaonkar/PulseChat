@@ -7,7 +7,7 @@ import connectDB from './config/db.js'; // Import the config
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
-import messageRoutes from './routes/chatRoutes.js';
+import messageRoutes from './routes/messageRoutes.js';
 import initSocket from './socket/socket.js';
 
 
