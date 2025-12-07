@@ -1,39 +1,35 @@
 import React from 'react';
 import { ChatState } from '../context/ChatProvider';
-
+// Import the CSS where we defined .notification-dot and .unread-bold
+import '../components/SearchWindow.css'; 
 
 const ChatList = ({ results, isSearch, handleFunction, currentUser }) => {
-  const { selectedChat, setSelectedChat } = ChatState();
-
-  
-  const getSender = (loggedUser, users) => {
-    
-    if(!users || users.length < 2) return "Unknown User";
-    // If user[0] is me, return user[1].name
-    return users[0]._id === loggedUser._id ? users[1].name : users[0].name;
-  };
+  // 1. Get notification state from Context
+  const { selectedChat, setSelectedChat, notification } = ChatState();
 
   return (
     <div className="user-list">
       {results.map((chatOrUser) => {
-        
-        
         let displayName = "";
         let displayPic = "";
+        
+        // 2. LOGIC: Calculate unread notifications for this specific chat
+        // We filter the global notification array to find messages belonging to THIS chat
+        const unreadCount = !isSearch 
+            ? notification.filter(n => n.chat._id === chatOrUser._id).length 
+            : 0;
         
         if (isSearch) {
           // It's a User Object (from search results)
           displayName = chatOrUser.name;
           displayPic = chatOrUser.pic;
         } else {
-          // It's a Chat Object (from /api/chat)
+          //It's a Chat Object (from /api/chat)
           if(chatOrUser.isGroupChat) {
              displayName = chatOrUser.chatName;
-             // Use a default group icon or generic pic
              displayPic = "https://cdn-icons-png.flaticon.com/512/166/166258.png";
           } else {
-             // 1-on-1: Need to find the "other" person
-             // We pass 'currentUser' from parent to help with this
+             // 1-on-1 Logic
              if(currentUser && chatOrUser.users) {
                const otherUser = chatOrUser.users.find(u => u._id !== currentUser._id);
                displayName = otherUser ? otherUser.name : "User";
@@ -47,9 +43,6 @@ const ChatList = ({ results, isSearch, handleFunction, currentUser }) => {
             key={chatOrUser._id} 
             className={`user-card ${!isSearch && selectedChat === chatOrUser ? 'active' : ''}`}
             onClick={() => {
-                // If search, we pass the User ID. If Chat, we might just set it directly.
-                // But SearchWindow's 'accessChat' expects a UserID.
-                // Let's handle it:
                 if(isSearch) {
                     handleFunction(chatOrUser._id);
                 } else {
@@ -59,13 +52,24 @@ const ChatList = ({ results, isSearch, handleFunction, currentUser }) => {
           >
             <div className="user-avatar">
                <img src={displayPic} alt="av" style={{width:'100%', height:'100%', borderRadius:'50%', objectFit:'cover'}} />
-               {/* Online dot logic would go here with Socket.io later */}
+               
+               {/* 3. RENDER: The Red Notification Dot */}
+               {unreadCount > 0 && (
+                 <div className="notification-dot">
+                   {unreadCount > 9 ? '9+' : unreadCount}
+                 </div>
+               )}
             </div>
+            
             <div className="user-info">
               <div className="user-name">{displayName}</div>
-              {/* Show latest message only if it's a Chat object */}
+              
               {!isSearch && chatOrUser.latestMessage && (
-                <div className="user-status">
+                // 4. STYLE: Apply bold style if unread
+                <div className={`user-status ${unreadCount > 0 ? 'unread-bold' : ''}`}>
+                   {/* If unread, add a "New:" prefix in blue */}
+                   {unreadCount > 0 ? <span style={{color: '#3b82f6', marginRight: '4px'}}>New:</span> : ''}
+                   
                    {chatOrUser.latestMessage.content.substring(0, 30)}
                    {chatOrUser.latestMessage.content.length > 30 && "..."}
                 </div>

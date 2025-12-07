@@ -53,6 +53,10 @@ const initSocket = (server) => {
         socket.in(user._id).emit("message received", newMessageRecieved);
       });
     });
+    socket.on("add to group", ({ chat, userId }) => {
+        // Notify the specific user they've been added
+        socket.in(userId).emit("added to group", chat);
+    });
 
     // E. CLEANUP
     socket.off("setup", () => {

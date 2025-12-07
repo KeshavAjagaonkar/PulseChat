@@ -134,3 +134,30 @@ html, body, #root {
   background-color: rgba(255,255,255,0.1);
   color: var(--text-primary);
 }
+@media (max-width: 768px) {
+
+  /* DEFAULT STATE (No Chat Selected) */
+  .main-container:not(.chat-selected) .sidebar {
+    display: flex !important;
+    width: 100%;
+    min-width: 100%; /* Ensure it takes full space */
+  }
+  .main-container:not(.chat-selected) .chat-window {
+    display: none !important;
+  }
+
+  /* ACTIVE STATE (Chat Selected) */
+  .main-container.chat-selected .sidebar {
+    display: none !important;
+  }
+  .main-container.chat-selected .chat-window {
+    display: flex !important;
+    width: 100%;
+    min-width: 100%; /* Ensure it takes full space */
+  }
+
+  /* Hide the Navigation Sidebar on mobile */
+  .nav-sidebar {
+    display: none;
+  }
+}

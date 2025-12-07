@@ -115,3 +115,25 @@
     background-color: rgba(15, 15, 15, 0.9); 
   }
 }
+.notification-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background-color: #ef4444; /* Red */
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  height: 18px;
+  min-width: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid #1a1a1a; /* Matches sidebar bg to create 'cutout' effect */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  padding: 2px;
+}
+.unread-bold {
+  font-weight: 700 !important;
+  color: white !important;
+}

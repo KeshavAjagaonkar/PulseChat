@@ -197,3 +197,104 @@
     padding: 10px 15px;
   }
 }
+.chat-header .icon-btn:first-child {
+  display: none; 
+}
+
+/* Show back button on Mobile */
+@media (max-width: 768px) {
+  .chat-header .icon-btn:first-child {
+    display: flex;
+    margin-right: 10px;
+  }
+}
+.chat-input-area-wrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(20, 20, 20, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* 1. The Banner above the input */
+.reply-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: rgba(40, 40, 40, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  animation: slideUp 0.2s ease-out;
+}
+
+.reply-info {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  color: #ccc;
+  border-left: 3px solid var(--accent-color);
+  padding-left: 10px;
+}
+
+.reply-label {
+  font-weight: bold;
+  color: var(--accent-color);
+  margin-bottom: 2px;
+}
+
+.close-reply {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px;
+}
+.close-reply:hover { color: white; }
+
+/* 2. The Preview INSIDE the Message Bubble */
+.message-reply-preview {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  border-left: 3px solid rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer; /* Could add click-to-scroll logic later */
+}
+
+.reply-sender {
+  font-weight: bold;
+  margin-bottom: 2px;
+  opacity: 0.9;
+}
+
+.reply-content {
+  opacity: 0.7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Adjust original input area to remove its top border since wrapper has it */
+.chat-input-area {
+  border-top: none !important; 
+}
+
+@keyframes highlightFade {
+  0% { background-color: rgba(59, 130, 246, 0.4); transform: scale(1.02); }
+  100% { background-color: transparent; transform: scale(1); }
+}
+
+.highlight-message {
+  animation: highlightFade 2s ease-out;
+  /* Optional: Add a border to make it distinct */
+  border: 1px solid var(--accent-color);
+  transition: all 0.3s;
+}

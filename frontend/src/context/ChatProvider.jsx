@@ -7,11 +7,12 @@ const ChatProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [selectedChat, setSelectedChat] = useState();
   const [chats, setChats] = useState([]);
+  // --- NEW: Add Notification State ---
+  const [notification, setNotification] = useState([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user is logged in
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
     setUser(userInfo);
 
@@ -29,6 +30,9 @@ const ChatProvider = ({ children }) => {
         setSelectedChat,
         chats,
         setChats,
+        // --- NEW: Expose Notification State ---
+        notification,
+        setNotification,
       }}
     >
       {children}
