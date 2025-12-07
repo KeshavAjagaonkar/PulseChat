@@ -1,34 +1,79 @@
 import React from 'react';
-// Note: This component assumes SearchWindow.css is imported in SearchWindow, 
-// so we don't need a separate CSS file for the list items.
+import { ChatState } from '../context/ChatProvider';
 
-// Dummy data for example
-const chats = [
-    { name: "Keshav Ajagaonkar", status: "Typing...", online: true, active: false },
-    { name: "Project Team", status: "Sent an attachment", online: false, active: true },
-    { name: "John Doe", status: "Hey, are we still on?", online: false, active: false },
-    { name: "Jane Smith", status: "Received a file", online: true, active: false },
-];
 
-const ChatList = () => {
+const ChatList = ({ results, isSearch, handleFunction, currentUser }) => {
+  const { selectedChat, setSelectedChat } = ChatState();
+
+  
+  const getSender = (loggedUser, users) => {
+    
+    if(!users || users.length < 2) return "Unknown User";
+    // If user[0] is me, return user[1].name
+    return users[0]._id === loggedUser._id ? users[1].name : users[0].name;
+  };
+
   return (
     <div className="user-list">
-      {chats.map((chat, index) => (
-        // Apply classes dynamically based on the dummy data
-        <div 
-          key={index} 
-          className={`user-card ${chat.active ? 'active' : ''}`}
-        >
-          <div className="user-avatar">
-            {/* Show online dot conditionally */}
-            {chat.online && <span className="online-dot"></span>}
+      {results.map((chatOrUser) => {
+        
+        
+        let displayName = "";
+        let displayPic = "";
+        
+        if (isSearch) {
+          // It's a User Object (from search results)
+          displayName = chatOrUser.name;
+          displayPic = chatOrUser.pic;
+        } else {
+          // It's a Chat Object (from /api/chat)
+          if(chatOrUser.isGroupChat) {
+             displayName = chatOrUser.chatName;
+             // Use a default group icon or generic pic
+             displayPic = "https://cdn-icons-png.flaticon.com/512/166/166258.png";
+          } else {
+             // 1-on-1: Need to find the "other" person
+             // We pass 'currentUser' from parent to help with this
+             if(currentUser && chatOrUser.users) {
+               const otherUser = chatOrUser.users.find(u => u._id !== currentUser._id);
+               displayName = otherUser ? otherUser.name : "User";
+               displayPic = otherUser ? otherUser.pic : "";
+             }
+          }
+        }
+
+        return (
+          <div 
+            key={chatOrUser._id} 
+            className={`user-card ${!isSearch && selectedChat === chatOrUser ? 'active' : ''}`}
+            onClick={() => {
+                // If search, we pass the User ID. If Chat, we might just set it directly.
+                // But SearchWindow's 'accessChat' expects a UserID.
+                // Let's handle it:
+                if(isSearch) {
+                    handleFunction(chatOrUser._id);
+                } else {
+                    setSelectedChat(chatOrUser);
+                }
+            }}
+          >
+            <div className="user-avatar">
+               <img src={displayPic} alt="av" style={{width:'100%', height:'100%', borderRadius:'50%', objectFit:'cover'}} />
+               {/* Online dot logic would go here with Socket.io later */}
+            </div>
+            <div className="user-info">
+              <div className="user-name">{displayName}</div>
+              {/* Show latest message only if it's a Chat object */}
+              {!isSearch && chatOrUser.latestMessage && (
+                <div className="user-status">
+                   {chatOrUser.latestMessage.content.substring(0, 30)}
+                   {chatOrUser.latestMessage.content.length > 30 && "..."}
+                </div>
+              )}
+            </div>
           </div>
-          <div className="user-info">
-            <div className="user-name">{chat.name}</div>
-            <div className="user-status">{chat.status}</div>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

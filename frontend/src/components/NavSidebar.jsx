@@ -1,6 +1,7 @@
 import React from 'react';
 import './NavSidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 // Import icons for the navigation items
 import { faMessage, faUserGroup, faCog, faVideo } from '@fortawesome/free-solid-svg-icons';
 

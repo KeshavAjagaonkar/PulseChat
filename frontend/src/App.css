@@ -1,6 +1,5 @@
 /* --- GLOBAL VARIABLES & RESET --- */
 :root {
-  /* Theme Colors (Professional Clean) */
   --bg-base: #121212;             
   --bg-glass: rgba(40, 40, 40, 0.7); 
   --bg-glass-hover: rgba(60, 60, 60, 0.8);
@@ -10,7 +9,6 @@
   
   --border-subtle: 1px solid rgba(255, 255, 255, 0.08);
   --radius-lg: 12px;
-  --radius-circle: 50%;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -24,7 +22,7 @@ html, body, #root {
   overflow: hidden;
 }
 
-/* Main Shell Layout */
+/* Main Shell Layout (Shared Background) */
 .main-container {
   display: flex;
   height: 100vh;
@@ -32,7 +30,93 @@ html, body, #root {
   background-image: radial-gradient(circle at 10% 20%, rgba(20, 20, 20, 1) 0%, rgba(0, 0, 0, 1) 90%);
 }
 
-/* Global Icon Button Utility (Used in both components) */
+/* --- AUTH PAGES (Login/Register) --- */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  /* Use the same background as the main app for consistency */
+  background-image: radial-gradient(circle at 10% 20%, rgba(20, 20, 20, 1) 0%, rgba(0, 0, 0, 1) 90%);
+}
+
+.auth-card {
+  background-color: var(--bg-glass); /* Matches Sidebar */
+  backdrop-filter: blur(12px);
+  padding: 40px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  border: var(--border-subtle);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.auth-card h2 {
+  color: var(--accent-color);
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.auth-input-group {
+  margin-bottom: 20px;
+}
+
+.auth-input-group label {
+  display: block;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.auth-input-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: var(--border-subtle);
+  background-color: rgba(255, 255, 255, 0.05);
+  color: white;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.auth-input-group input:focus {
+  border-color: var(--accent-color);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.auth-button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--accent-color);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.auth-button:hover {
+  background-color: #2563eb;
+}
+
+.auth-link {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.auth-link a {
+  color: var(--accent-color);
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+/* --- UTILITIES --- */
 .icon-btn {
   background: none;
   border: none;
