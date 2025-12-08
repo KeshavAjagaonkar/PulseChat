@@ -7,8 +7,9 @@ const ChatProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [selectedChat, setSelectedChat] = useState();
   const [chats, setChats] = useState([]);
-  // --- NEW: Add Notification State ---
   const [notification, setNotification] = useState([]);
+  // Online users tracking
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
   const navigate = useNavigate();
 
@@ -30,9 +31,11 @@ const ChatProvider = ({ children }) => {
         setSelectedChat,
         chats,
         setChats,
-        // --- NEW: Expose Notification State ---
         notification,
         setNotification,
+        // Online users state
+        onlineUsers,
+        setOnlineUsers,
       }}
     >
       {children}

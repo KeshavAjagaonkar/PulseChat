@@ -4,7 +4,7 @@ import './App.css'
 
 import Login from './pages/Login';
 import Register from './pages/Register';
-import HomeLayout from './pages/HomeLayout'; 
+import HomeLayout from './pages/HomeLayout';
 
 const App = () => {
   // FIX 1: Initialize state based on localStorage presence
@@ -13,14 +13,39 @@ const App = () => {
     return userInfo ? true : false;
   });
 
-  // FIX 2: Ensure state stays in sync on load
+  // FIX 2: Ensure state stays in sync on load and when storage changes
   useEffect(() => {
-    const userInfo = localStorage.getItem("userInfo");
-    if (userInfo) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
+    const checkAuth = () => {
+      const userInfo = localStorage.getItem("userInfo");
+      setIsAuthenticated(!!userInfo);
+    };
+
+    // Check on mount
+    checkAuth();
+
+    // Apply saved theme settings on mount
+    const savedSettings = localStorage.getItem('pulsechat_settings');
+    if (savedSettings) {
+      try {
+        const settings = JSON.parse(savedSettings);
+        if (settings.accentColor) {
+          document.documentElement.style.setProperty('--accent-color', settings.accentColor);
+        }
+      } catch (e) {
+        console.error('Error loading settings:', e);
+      }
     }
+
+    // Listen for storage changes (e.g., logout from another tab)
+    window.addEventListener('storage', checkAuth);
+
+    // Also check periodically to catch logout from same tab
+    const interval = setInterval(checkAuth, 1000);
+
+    return () => {
+      window.removeEventListener('storage', checkAuth);
+      clearInterval(interval);
+    };
   }, []);
 
   const handleLogin = () => {
@@ -33,24 +58,24 @@ const App = () => {
     }
     return children;
   };
-  
+
   return (
-      <Routes>
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
-        <Route path="/register" element={<Register />} />
-        
-        {/* Protected Home Route */}
-        <Route 
-          path="/" 
-          element={
-            <ProtectedRoute>
-              <HomeLayout />
-            </ProtectedRoute>
-          } 
-        />
-        
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+    <Routes>
+      <Route path="/login" element={<Login onLogin={handleLogin} />} />
+      <Route path="/register" element={<Register />} />
+
+      {/* Protected Home Route */}
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <HomeLayout />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 };
 

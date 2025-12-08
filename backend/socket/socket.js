@@ -1,67 +1,96 @@
 import { Server } from "socket.io";
 
+// Track online users: { odId: socketId }
+const onlineUsers = new Map();
+
 const initSocket = (server) => {
-  // 1. Initialize Socket.io
   const io = new Server(server, {
-    pingTimeout: 60000, // Close connection if user is silent for 60s (saves bandwidth)
+    pingTimeout: 60000,
     cors: {
-      origin: "http://localhost:5173", // Your Frontend URL
-      // origin: "*", // Use this if you have trouble connecting
+      origin: "http://localhost:5173",
+      credentials: true,
     },
   });
 
-  // 2. Listen for Connections
-    io.on("connection", (socket) => {
-    console.log("Connected to socket.io");
+  io.on("connection", (socket) => {
+    console.log("Connected to socket.io:", socket.id);
 
     // A. SETUP: User logs in and joins their own personal room
-    // The frontend will emit "setup" and send the User Data
-        socket.on("setup", (userData) => {
-         if (!userData || !userData._id) {
+    socket.on("setup", (userData) => {
+      if (!userData || !userData._id) {
         console.log("Socket setup failed: No user data received");
-        return; // Stop here, don't crash
-      } 
+        return;
+      }
+
+      // Store user data on socket instance for cleanup
+      socket.userData = userData;
       socket.join(userData._id);
-      console.log("User Joined Room: " + userData._id);
+
+      // Track user as online
+      onlineUsers.set(userData._id, socket.id);
+
+      console.log("User Joined Room:", userData._id);
+      console.log("Online Users:", Array.from(onlineUsers.keys()));
+
+      // Emit connected confirmation
       socket.emit("connected");
+
+      // Broadcast online users list to all connected clients
+      io.emit("online users", Array.from(onlineUsers.keys()));
     });
 
     // B. JOIN CHAT: User clicks on a chat
-    // They join a room specific to that Chat ID
     socket.on("join chat", (room) => {
       socket.join(room);
-      console.log("User Joined Chat: " + room);
+      console.log("User Joined Chat:", room);
     });
 
-    // C. TYPING: User starts typing
-    socket.on("typing", (room) => socket.in(room).emit("typing"));
-    socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
+    // C. TYPING: User starts/stops typing
+    socket.on("typing", (room) => {
+      socket.in(room).emit("typing");
+    });
+
+    socket.on("stop typing", (room) => {
+      socket.in(room).emit("stop typing");
+    });
 
     // D. NEW MESSAGE: User sends a message
-    socket.on("new message", (newMessageRecieved) => {
-      var chat = newMessageRecieved.chat;
+    socket.on("new message", (newMessageReceived) => {
+      const chat = newMessageReceived.chat;
 
-      if (!chat.users) return console.log("chat.users not defined");
+      if (!chat || !chat.users) {
+        console.log("chat.users not defined");
+        return;
+      }
 
-      // Loop through all users in the chat
+      // Send to all users in the chat except sender
       chat.users.forEach((user) => {
-        // Don't send the message back to the sender (they already have it)
-        if (user._id == newMessageRecieved.sender._id) return;
-
-        // Send to everyone else inside their personal room
-        // logic: "in user._id room, emit 'message received'"
-        socket.in(user._id).emit("message received", newMessageRecieved);
+        if (user._id === newMessageReceived.sender._id) return;
+        socket.in(user._id).emit("message received", newMessageReceived);
       });
     });
+
+    // E. GROUP MANAGEMENT
     socket.on("add to group", ({ chat, userId }) => {
-        // Notify the specific user they've been added
-        socket.in(userId).emit("added to group", chat);
+      // Notify the specific user they've been added
+      socket.in(userId).emit("added to group", chat);
     });
 
-    // E. CLEANUP
-    socket.off("setup", () => {
-      console.log("USER DISCONNECTED");
-      socket.leave(userData._id);
+    // F. DISCONNECT: User closes browser/tab
+    socket.on("disconnect", () => {
+      console.log("User disconnected:", socket.id);
+
+      if (socket.userData && socket.userData._id) {
+        // Remove from online users
+        onlineUsers.delete(socket.userData._id);
+        socket.leave(socket.userData._id);
+
+        console.log("User went offline:", socket.userData._id);
+        console.log("Online Users:", Array.from(onlineUsers.keys()));
+
+        // Broadcast updated online users list
+        io.emit("online users", Array.from(onlineUsers.keys()));
+      }
     });
   });
 };

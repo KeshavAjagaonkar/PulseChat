@@ -1,0 +1,401 @@
+/* Group Info Modal Specific Styles */
+.group-info-modal {
+    max-width: 480px;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.group-info-modal::-webkit-scrollbar {
+    width: 6px;
+}
+
+.group-info-modal::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+}
+
+/* Info Header */
+.info-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+}
+
+.info-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.info-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.group-avatar {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--accent-color), #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+}
+
+.info-details h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 4px 0;
+}
+
+.member-count {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin: 0;
+}
+
+.user-email {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Section Titles */
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.section-title svg {
+    font-size: 14px;
+}
+
+.crown-icon {
+    color: #fbbf24;
+}
+
+/* Admin Section */
+.admin-section {
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 16px;
+}
+
+.admin-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: rgba(251, 191, 36, 0.1);
+    border-radius: 10px;
+    border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.admin-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.you-badge {
+    margin-left: auto;
+    background: var(--accent-color);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* Members Section */
+.members-section {
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 16px;
+}
+
+.members-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.member-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    transition: background 0.2s;
+}
+
+.member-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.member-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.member-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.member-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.you-tag {
+    color: var(--accent-color);
+    font-weight: 400;
+}
+
+.admin-crown {
+    color: #fbbf24;
+    font-size: 12px;
+}
+
+.member-email {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.remove-member-btn {
+    background: rgba(239, 68, 68, 0.1);
+    border: none;
+    color: #ef4444;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    opacity: 0;
+}
+
+.member-item:hover .remove-member-btn {
+    opacity: 1;
+}
+
+.remove-member-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+.remove-member-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Add Member Section */
+.add-member-section {
+    padding: 16px 0;
+}
+
+.search-wrapper {
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.search-wrapper .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.search-wrapper .search-input {
+    width: 100%;
+    padding: 12px 14px 12px 40px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.search-wrapper .search-input:focus {
+    border-color: var(--accent-color);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.loading-text {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 10px;
+    font-size: 13px;
+}
+
+.search-results {
+    max-height: 160px;
+    overflow-y: auto;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.search-result-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.result-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.result-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.result-name {
+    display: block;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.result-email {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.add-btn {
+    background: var(--accent-color);
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.add-btn:hover {
+    transform: scale(1.1);
+}
+
+.add-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Leave Group Button */
+.leave-group-btn {
+    width: 100%;
+    padding: 14px;
+    margin-top: 20px;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 10px;
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.leave-group-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.5);
+}
+
+.leave-group-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* User Info Section (1-on-1 chat) */
+.user-info-section {
+    padding: 16px 0;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.info-value {
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.loading-spinner {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

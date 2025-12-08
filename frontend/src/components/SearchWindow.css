@@ -4,8 +4,8 @@
   min-width: 300px;
   display: flex;
   flex-direction: column;
-  background-color: rgba(15, 15, 15, 0.6); 
-  backdrop-filter: blur(15px);             
+  background-color: rgba(15, 15, 15, 0.6);
+  backdrop-filter: blur(15px);
   border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -13,24 +13,27 @@
   height: 80px;
   min-height: 80px;
   display: flex;
-  align-items: center; 
+  align-items: center;
   justify-content: center;
-  padding: 0 20px; /* Horizontal padding only */
+  padding: 0 20px;
+  /* Horizontal padding only */
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* Search Input Styling */
 .search-input {
   width: 100%;
-  height: 45px; /* Fixed height for the input bar itself */
-  padding: 0 15px; /* Remove top/bottom padding, rely on height */
+  height: 45px;
+  /* Fixed height for the input bar itself */
+  padding: 0 15px;
+  /* Remove top/bottom padding, rely on height */
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background-color: rgba(255, 255, 255, 0.1);
   color: white;
   outline: none;
   transition: all 0.3s ease;
-  
+
   /* Text alignment inside input */
   display: flex;
   align-items: center;
@@ -64,18 +67,21 @@
   cursor: pointer;
   transition: background 0.2s;
 }
+
 .user-card:hover {
   background-color: rgba(255, 255, 255, 0.08);
 }
 
 .user-avatar {
-  width: 48px; height: 48px;
+  width: 48px;
+  height: 48px;
   background: linear-gradient(135deg, #444, #2a2a2a);
   border-radius: 50%;
   margin-right: 15px;
   position: relative;
   flex-shrink: 0;
 }
+
 /* --- New Additions to SearchWindow.css --- */
 
 /* Add this block for the Online Dot */
@@ -85,55 +91,82 @@
   right: 0;
   width: 12px;
   height: 12px;
-  background-color: #4CAF50; /* A clear green color for 'Online' */
+  background-color: #4CAF50;
+  /* A clear green color for 'Online' */
   border-radius: 50%;
-  border: 3px solid rgba(15, 15, 15, 0.9); /* Border helps it stand out on dark background */
+  border: 3px solid rgba(15, 15, 15, 0.9);
+  /* Border helps it stand out on dark background */
   box-shadow: 0 0 5px rgba(76, 175, 80, 0.8);
 }
 
 /* Add this block for the Active Card State */
 .user-card.active {
-  background-color: var(--accent-color); /* Use the accent color for selection */
+  background-color: var(--accent-color);
+  /* Use the accent color for selection */
   box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
 }
 
 /* Ensure text inside the active card is white and crisp */
 .user-card.active .user-name {
-    color: white;
-    font-weight: 600;
+  color: white;
+  font-weight: 600;
 }
+
 .user-card.active .user-status {
-    color: rgba(255, 255, 255, 0.8);
-    font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
 }
+
 @media (max-width: 768px) {
   .sidebar {
     /* On mobile, it takes full width, allowing it to slide over the chat */
     width: 100%;
     min-width: 100%;
     /* The blur is too heavy on full screen, let's slightly adjust the background */
-    background-color: rgba(15, 15, 15, 0.9); 
+    background-color: rgba(15, 15, 15, 0.9);
   }
 }
+
 .notification-dot {
   position: absolute;
-  top: -2px;
-  right: -2px;
-  background-color: #ef4444; /* Red */
+  top: -4px;
+  right: -4px;
+  background-color: #3b82f6;
+  /* Blue for unread messages */
   color: white;
   font-size: 10px;
   font-weight: bold;
-  height: 18px;
-  min-width: 18px;
+  height: 20px;
+  min-width: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  border: 2px solid #1a1a1a; /* Matches sidebar bg to create 'cutout' effect */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  border: 2px solid #1a1a1a;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.5);
   padding: 2px;
+  animation: pulse 2s infinite;
 }
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+}
+
 .unread-bold {
   font-weight: 700 !important;
   color: white !important;
+}
+
+/* Unread chat card glow */
+.user-card.has-unread {
+  border-left: 3px solid #3b82f6;
+  background: rgba(59, 130, 246, 0.05);
 }

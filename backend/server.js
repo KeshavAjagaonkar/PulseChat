@@ -3,11 +3,12 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import http from 'http';
 import cookieParser from 'cookie-parser';
-import connectDB from './config/db.js'; // Import the config
+import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
 import messageRoutes from './routes/messageRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js';
 import initSocket from './socket/socket.js';
 
 
@@ -28,6 +29,7 @@ app.use('/api/users', authRoutes); // Auth (Login/Register)
 app.use('/api/users', userRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/message', messageRoutes);
+app.use('/api/upload', uploadRoutes);
 
 const PORT = process.env.PORT || 5000;
 

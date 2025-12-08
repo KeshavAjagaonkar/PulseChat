@@ -1,13 +1,16 @@
 /* Nav Sidebar Container */
 .nav-sidebar {
-  width: 70px; /* Fixed, narrow width */
+  width: 70px;
+  /* Fixed, narrow width */
   min-width: 70px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Pushes settings to the bottom */
+  justify-content: space-between;
+  /* Pushes settings to the bottom */
   align-items: center;
   padding: 20px 0;
-  background-color: rgba(10, 10, 10, 0.9); /* Darker than the search sidebar */
+  background-color: rgba(10, 10, 10, 0.9);
+  /* Darker than the search sidebar */
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
 }
@@ -28,7 +31,8 @@
 .nav-links {
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Space between icons */
+  gap: 15px;
+  /* Space between icons */
 }
 
 /* Individual Navigation Item */
@@ -58,7 +62,8 @@
 }
 
 .nav-bottom {
-  margin-top: auto; /* Pushes content to the bottom */
+  margin-top: auto;
+  /* Pushes content to the bottom */
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -69,7 +74,8 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(45deg, #00d2ff, #3a7bd5); /* Placeholder gradient */
+  background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+  /* Placeholder gradient */
   cursor: pointer;
   transition: transform 0.2s;
 }
@@ -77,6 +83,25 @@
 .user-profile-icon:hover {
   transform: scale(1.05);
 }
+
+/* Logout Button */
+.nav-item.logout-btn:hover {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+/* User Profile with actual image */
+.user-profile-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+  cursor: pointer;
+  transition: transform 0.2s;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
 @media (max-width: 768px) {
   .nav-sidebar {
     display: none;

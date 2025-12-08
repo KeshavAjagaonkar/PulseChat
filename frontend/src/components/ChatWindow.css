@@ -3,7 +3,8 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: transparent; /* Allows main gradient to show */
+  background: transparent;
+  /* Allows main gradient to show */
   position: relative;
 }
 
@@ -11,31 +12,38 @@
 /* --- HEADER FIX --- */
 .chat-header {
   /* 1. HEIGHT MATCHING: Set exact height to match sidebar */
-  height: 80px; 
-  min-height: 80px; /* Forces it to never shrink */
-  
+  height: 80px;
+  min-height: 80px;
+  /* Forces it to never shrink */
+
   /* 2. ALIGNMENT: Flexbox centering */
   display: flex;
-  align-items: center;       /* Vertical Center */
-  justify-content: space-between; /* Spacing */
-  
+  align-items: center;
+  /* Vertical Center */
+  justify-content: space-between;
+  /* Spacing */
+
   padding: 0 25px;
   background-color: rgba(20, 20, 20, 0.3);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.chat-header-info h3 { 
-  font-size: 16px; 
-  margin: 0 0 4px 0; /* Remove default margins that push text off-center */
-  color: var(--text-primary); 
+.chat-header-info h3 {
+  font-size: 16px;
+  margin: 0 0 4px 0;
+  /* Remove default margins that push text off-center */
+  color: var(--text-primary);
 }
 
 /* Fix the Icons Container */
 .chat-actions {
   display: flex;
-  align-items: center; /* Vertically center the buttons */
-  gap: 10px;           /* Consistent space between icons */
-  height: 100%;        /* Take full height of header */
+  align-items: center;
+  /* Vertically center the buttons */
+  gap: 10px;
+  /* Consistent space between icons */
+  height: 100%;
+  /* Take full height of header */
 }
 
 /* Ensure buttons themselves are centered */
@@ -56,25 +64,34 @@
   flex-direction: column;
   gap: 12px;
 }
+
 /* Scrollbar Polish */
-.messages-container::-webkit-scrollbar { width: 6px; }
-.messages-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+.messages-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
 
 /* --- MESSAGE BUBBLES --- */
 .message {
   max-width: 65%;
-  min-width: 120px; /* Ensures enough space for short texts */
-  
+  min-width: 120px;
+  /* Ensures enough space for short texts */
+
   /* CRITICAL: Right padding (40px) makes space for the menu button */
-  padding: 12px 40px 12px 16px; 
-  
+  padding: 12px 40px 12px 16px;
+
   border-radius: 16px;
   font-size: 14px;
   line-height: 1.5;
-  position: relative; /* Anchor for absolute button */
+  position: relative;
+  /* Anchor for absolute button */
   display: flex;
   flex-direction: column;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Show menu trigger only on hover */
@@ -92,7 +109,8 @@
 
 .message.sent {
   align-self: flex-end;
-  background-color: var(--accent-color); /* Uses your global blue */
+  background-color: var(--accent-color);
+  /* Uses your global blue */
   color: white;
   border-top-right-radius: 4px;
 }
@@ -126,79 +144,92 @@
   font-size: 14px;
   transition: 0.2s;
 }
+
 .chat-input-area input:focus {
   background-color: rgba(255, 255, 255, 0.1);
   border-color: var(--accent-color);
 }
+
 .icon-btn {
-    color: rgba(255, 255, 255, 0.6);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: color 0.2s, background-color 0.2s;
-    /* Ensure input area buttons have a base size like header buttons */
-    height: 40px; 
-    width: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0; /* Prevents shrinking in the flex layout */
+  color: rgba(255, 255, 255, 0.6);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s, background-color 0.2s;
+  /* Ensure input area buttons have a base size like header buttons */
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  /* Prevents shrinking in the flex layout */
 }
 
 .icon-btn:hover {
-    color: white; /* Bright white on hover */
-    background-color: rgba(255, 255, 255, 0.15); /* Subtle background highlight */
-    border-radius: 50%; /* Makes the hover area a circle */
+  color: white;
+  /* Bright white on hover */
+  background-color: rgba(255, 255, 255, 0.15);
+  /* Subtle background highlight */
+  border-radius: 50%;
+  /* Makes the hover area a circle */
 }
 
 /* Specific styling for the Send button (Paper Plane) */
 .send-btn {
-    background-color: var(--accent-color); /* Uses the app's accent color */
-    color: white !important; /* Force white icon color */
-    border-radius: 50%;
-    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
-    /* Override general hover to create a press effect */
+  background-color: var(--accent-color);
+  /* Uses the app's accent color */
+  color: white !important;
+  /* Force white icon color */
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+  /* Override general hover to create a press effect */
 }
 
 .send-btn:hover {
-    background-color: #3174d8; /* Slightly darker blue on hover */
-    box-shadow: 0 2px 5px rgba(59, 130, 246, 0.6);
-    transform: translateY(1px); /* Little downward shift for 'press' feel */
+  background-color: #3174d8;
+  /* Slightly darker blue on hover */
+  box-shadow: 0 2px 5px rgba(59, 130, 246, 0.6);
+  transform: translateY(1px);
+  /* Little downward shift for 'press' feel */
 }
+
 .send-btn:disabled {
   /* Dim the button */
   opacity: 0.5;
   cursor: not-allowed;
-  
+
   /* Override any hover/press effects when disabled */
-  background-color: var(--accent-color) !important; 
+  background-color: var(--accent-color) !important;
   transform: none !important;
   box-shadow: none !important;
 }
+
 @media (max-width: 768px) {
   .chat-window {
     /* Takes up 100% of the screen width on mobile */
     width: 100%;
     min-width: 100%;
-    flex: 1 1 100%; 
+    flex: 1 1 100%;
   }
-  
+
   /* Increase message bubble size for mobile readability */
   .message {
-    max-width: 85%; 
+    max-width: 85%;
   }
-  
+
   /* Collapse the input field padding slightly */
   .chat-input-area {
     padding: 15px 12px;
   }
-  
+
   .chat-input-area input {
     padding: 10px 15px;
   }
 }
+
 .chat-header .icon-btn:first-child {
-  display: none; 
+  display: none;
 }
 
 /* Show back button on Mobile */
@@ -208,6 +239,7 @@
     margin-right: 10px;
   }
 }
+
 .chat-input-area-wrapper {
   display: flex;
   flex-direction: column;
@@ -249,7 +281,10 @@
   font-size: 16px;
   padding: 5px;
 }
-.close-reply:hover { color: white; }
+
+.close-reply:hover {
+  color: white;
+}
 
 /* 2. The Preview INSIDE the Message Bubble */
 .message-reply-preview {
@@ -261,7 +296,8 @@
   font-size: 12px;
   display: flex;
   flex-direction: column;
-  cursor: pointer; /* Could add click-to-scroll logic later */
+  cursor: pointer;
+  /* Could add click-to-scroll logic later */
 }
 
 .reply-sender {
@@ -278,23 +314,164 @@
 }
 
 @keyframes slideUp {
-  from { transform: translateY(10px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Adjust original input area to remove its top border since wrapper has it */
 .chat-input-area {
-  border-top: none !important; 
+  border-top: none !important;
 }
 
 @keyframes highlightFade {
-  0% { background-color: rgba(59, 130, 246, 0.4); transform: scale(1.02); }
-  100% { background-color: transparent; transform: scale(1); }
+  0% {
+    background-color: rgba(59, 130, 246, 0.4);
+    transform: scale(1.02);
+  }
+
+  100% {
+    background-color: transparent;
+    transform: scale(1);
+  }
 }
 
 .highlight-message {
   animation: highlightFade 2s ease-out;
-  /* Optional: Add a border to make it distinct */
   border: 1px solid var(--accent-color);
   transition: all 0.3s;
+}
+
+/* === SENDER INFO (WhatsApp style) === */
+.message-sender {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.sender-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.sender-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-color);
+}
+
+/* === FILE ATTACHMENTS === */
+.message-image {
+  margin-bottom: 8px;
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 280px;
+}
+
+.message-image img {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.message-image img:hover {
+  transform: scale(1.02);
+}
+
+.message-video {
+  margin-bottom: 8px;
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 320px;
+}
+
+.message-video video {
+  width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+}
+
+.message-document {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 8px;
+  transition: background 0.2s;
+}
+
+.message-document:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.message-document .doc-icon {
+  font-size: 24px;
+  color: var(--accent-color);
+}
+
+.message-document .doc-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.message-document .doc-name {
+  display: block;
+  font-weight: 500;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.message-document .doc-size {
+  display: block;
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.message-document .download-icon {
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+/* === UPLOAD PROGRESS === */
+.upload-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px;
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--accent-color);
+  font-size: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Fix for messages with only file (no text) */
+.message-text:empty {
+  display: none;
+}
+
+/* Adjust message padding when there's a sender */
+.message.received .message-sender+.message-text,
+.message.received .message-sender+.message-image,
+.message.received .message-sender+.message-video,
+.message.received .message-sender+.message-document {
+  margin-top: 4px;
 }
