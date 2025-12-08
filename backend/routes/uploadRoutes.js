@@ -1,6 +1,6 @@
 import express from "express";
 import { protect } from "../middleware/authMiddleware.js";
-import { upload, uploadProfile } from "../config/cloudinary.js";
+import { upload, uploadProfile, cloudinary } from "../config/cloudinary.js";
 
 const router = express.Router();
 
@@ -13,17 +13,29 @@ router.post("/file", protect, upload.single("file"), async (req, res) => {
 
         // Get file info from Cloudinary response
         const fileUrl = req.file.path;
-        const fileType = req.file.mimetype.startsWith("image/")
+        const fileType = req.file.mimetype?.startsWith("image/")
             ? "image"
-            : req.file.mimetype.startsWith("video/")
+            : req.file.mimetype?.startsWith("video/")
                 ? "video"
                 : "document";
 
         const fileName = req.file.originalname;
-        const fileSize = req.file.size;
+        const fileSize = req.file.size || 0;
+
+        // For documents (raw files), manually construct download URL
+        // The correct format is: https://res.cloudinary.com/{cloud}/raw/upload/fl_attachment/{version}/{public_id}
+        let downloadUrl = fileUrl;
+        if (fileType === "document") {
+            // Insert fl_attachment flag after /upload/
+            downloadUrl = fileUrl.replace('/upload/', '/upload/fl_attachment/');
+        }
+
+        console.log("File upload success:", { type: fileType, name: fileName, size: fileSize });
+        console.log("URLs:", { url: fileUrl, downloadUrl: downloadUrl });
 
         res.json({
             url: fileUrl,
+            downloadUrl: downloadUrl,
             type: fileType,
             name: fileName,
             size: fileSize,

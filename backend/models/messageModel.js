@@ -9,6 +9,7 @@ const messageSchema = mongoose.Schema(
     // File attachment fields
     file: {
       url: { type: String },
+      downloadUrl: { type: String }, // Separate download URL for documents
       type: { type: String, enum: ['image', 'video', 'document', null] },
       name: { type: String },
       size: { type: Number },

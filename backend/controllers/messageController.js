@@ -24,6 +24,7 @@ const sendMessage = async (req, res) => {
   if (file && file.url) {
     newMessage.file = {
       url: file.url,
+      downloadUrl: file.downloadUrl || file.url, // Use downloadUrl if available
       type: file.type,
       name: file.name,
       size: file.size,
