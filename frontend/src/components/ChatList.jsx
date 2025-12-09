@@ -3,9 +3,31 @@ import { ChatState } from '../context/ChatProvider';
 // Import the CSS where we defined .notification-dot and .unread-bold
 import '../components/SearchWindow.css';
 
-const ChatList = ({ results, isSearch, handleFunction, currentUser }) => {
+const ChatList = ({ results, isSearch, handleFunction, currentUser, loading }) => {
   // 1. Get notification state from Context
   const { selectedChat, setSelectedChat, notification } = ChatState();
+
+  // Show empty state message
+  if (!loading && results.length === 0) {
+    return (
+      <div className="user-list">
+        <div className="empty-state-message">
+          {isSearch ? (
+            <>
+              <span className="empty-icon">🔍</span>
+              <p>No users found</p>
+            </>
+          ) : (
+            <>
+              <span className="empty-icon">💬</span>
+              <p>No chats yet</p>
+              <span className="empty-hint">Search for users to start chatting</span>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="user-list">
@@ -38,6 +60,30 @@ const ChatList = ({ results, isSearch, handleFunction, currentUser }) => {
           }
         }
 
+        // Get latest message preview for file attachments
+        const getLatestMessagePreview = () => {
+          const msg = chatOrUser.latestMessage;
+          if (!msg) return null;
+
+          if (msg.content) {
+            return (
+              <>
+                {msg.content.substring(0, 30)}
+                {msg.content.length > 30 && "..."}
+              </>
+            );
+          }
+
+          if (msg.file) {
+            const fileIcon = msg.file.type === 'image' ? '🖼️'
+              : msg.file.type === 'video' ? '🎬'
+                : '📄';
+            return <span style={{ fontStyle: 'italic' }}>{fileIcon} {msg.file.type || 'File'}</span>;
+          }
+
+          return <span style={{ fontStyle: 'italic' }}>No message</span>;
+        };
+
         return (
           <div
             key={chatOrUser._id}
@@ -69,18 +115,7 @@ const ChatList = ({ results, isSearch, handleFunction, currentUser }) => {
                 <div className={`user-status ${unreadCount > 0 ? 'unread-bold' : ''}`}>
                   {/* If unread, add a "New:" prefix in blue */}
                   {unreadCount > 0 ? <span style={{ color: '#3b82f6', marginRight: '4px' }}>New:</span> : ''}
-
-                  {/* Handle file-only messages or empty content */}
-                  {chatOrUser.latestMessage.content ? (
-                    <>
-                      {chatOrUser.latestMessage.content.substring(0, 30)}
-                      {chatOrUser.latestMessage.content.length > 30 && "..."}
-                    </>
-                  ) : chatOrUser.latestMessage.file ? (
-                    <span style={{ fontStyle: 'italic' }}>📎 File</span>
-                  ) : (
-                    <span style={{ fontStyle: 'italic' }}>No message</span>
-                  )}
+                  {getLatestMessagePreview()}
                 </div>
               )}
             </div>

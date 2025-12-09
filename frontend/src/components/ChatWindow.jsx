@@ -369,7 +369,16 @@ const ChatWindow = () => {
 
     // Document - Use downloadUrl from backend if available
     // The backend generates this with fl_attachment flag for proper downloads
-    const downloadUrl = file.downloadUrl || file.url;
+    // For old files without downloadUrl, try to construct one
+    let downloadUrl = file.downloadUrl;
+    if (!downloadUrl && file.url) {
+      // Try to add fl_attachment to Cloudinary URL for old files
+      if (file.url.includes('cloudinary.com') && file.url.includes('/raw/upload/')) {
+        downloadUrl = file.url.replace('/raw/upload/', '/raw/upload/fl_attachment/');
+      } else {
+        downloadUrl = file.url;
+      }
+    }
 
     // Function to handle download with proper content disposition
     const handleDownload = async (e) => {
@@ -377,8 +386,18 @@ const ChatWindow = () => {
 
       try {
         // Fetch the file as blob to force proper download
-        const response = await fetch(downloadUrl);
+        const response = await fetch(downloadUrl, { mode: 'cors' });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
         const blob = await response.blob();
+
+        // Check if blob has content
+        if (blob.size === 0) {
+          throw new Error('Empty file received');
+        }
 
         // Create blob URL and trigger download
         const blobUrl = window.URL.createObjectURL(blob);
@@ -391,7 +410,8 @@ const ChatWindow = () => {
         window.URL.revokeObjectURL(blobUrl);
       } catch (error) {
         console.error('Download error:', error);
-        // Fallback: open in new tab
+        // Fallback: open in new tab with the download URL
+        // This lets the browser handle the download directly
         window.open(downloadUrl, '_blank');
       }
     };

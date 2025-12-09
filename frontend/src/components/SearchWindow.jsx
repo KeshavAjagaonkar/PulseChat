@@ -8,7 +8,7 @@ function SearchWindow() {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
-  
+
   const { user, setSelectedChat, chats, setChats } = ChatState();
 
   // 1. Function to search for users
@@ -40,7 +40,7 @@ function SearchWindow() {
 
       // If the chat isn't already in our list, add it
       if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
-      
+
       setSelectedChat(data); // Opens the chat window
       setSearch(""); // Clear search
       setSearchResult([]); // Clear results
@@ -61,15 +61,15 @@ function SearchWindow() {
 
   useEffect(() => {
     // Only fetch if user is logged in
-    if(user) fetchChats();
+    if (user) fetchChats();
   }, [user]); // Runs when user logs in
 
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <input 
-          type="text" 
-          placeholder="Search users..." 
+        <input
+          type="text"
+          placeholder="Search users..."
           className="search-input"
           value={search}
           onChange={(e) => handleSearch(e.target.value)}
@@ -77,11 +77,12 @@ function SearchWindow() {
       </div>
 
       {/* Pass logic down to the List */}
-      <ChatList 
+      <ChatList
         results={search ? searchResult : chats} // Show search results OR my chats
         isSearch={!!search} // Boolean to tell the list how to render
         handleFunction={accessChat} // What happens when clicked
         currentUser={user}
+        loading={loading}
       />
     </div>
   )
