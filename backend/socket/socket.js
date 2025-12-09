@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import Message from "../models/messageModel.js";
 
 // Track online users: { odId: socketId }
 const onlineUsers = new Map();
@@ -77,6 +78,59 @@ const initSocket = (server) => {
     socket.on("add to group", ({ chat, userId }) => {
       // Notify the specific user they've been added
       socket.in(userId).emit("added to group", chat);
+    });
+
+    // ============================================
+    // E2. MESSAGE READ RECEIPTS
+    // ============================================
+
+    // Mark message as delivered (when recipient receives it)
+    socket.on("message:delivered", async ({ messageId, senderId }) => {
+      console.log(`Message ${messageId} delivered`);
+
+      try {
+        // Persist to database - only update if status is 'sent'
+        await Message.findOneAndUpdate(
+          { _id: messageId, status: 'sent' },
+          { status: 'delivered' }
+        );
+      } catch (err) {
+        console.error('Failed to update message status to delivered:', err);
+      }
+
+      // Notify sender that message was delivered
+      io.to(senderId).emit("message:status-update", {
+        messageId,
+        status: "delivered",
+      });
+    });
+
+    // Mark message as read (when recipient views the chat)
+    socket.on("message:read", async ({ messageIds, senderId, readerId }) => {
+      console.log(`Messages read by ${readerId}:`, messageIds);
+
+      try {
+        // Persist to database - update all messages to read
+        await Message.updateMany(
+          {
+            _id: { $in: messageIds },
+            status: { $ne: 'read' }
+          },
+          {
+            $set: { status: 'read' },
+            $addToSet: { readBy: readerId }
+          }
+        );
+      } catch (err) {
+        console.error('Failed to update message status to read:', err);
+      }
+
+      // Notify sender that messages were read
+      io.to(senderId).emit("message:status-update-batch", {
+        messageIds,
+        status: "read",
+        readerId,
+      });
     });
 
     // ============================================

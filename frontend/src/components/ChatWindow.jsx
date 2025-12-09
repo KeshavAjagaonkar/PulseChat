@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './ChatWindow.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperclip, faSmile, faPaperPlane, faPhone, faVideo, faInfoCircle, faArrowLeft, faTimes, faFile, faImage, faFileAlt, faSpinner, faDownload } from '@fortawesome/free-solid-svg-icons';
+import { faPaperclip, faSmile, faPaperPlane, faPhone, faVideo, faInfoCircle, faArrowLeft, faTimes, faFile, faImage, faFileAlt, faSpinner, faDownload, faCheck, faCheckDouble } from '@fortawesome/free-solid-svg-icons';
 import MessageMenu from './MessageMenu';
 import TypingIndicator from './TypingIndicator';
 import GroupInfoModal from './GroupInfoModal';
@@ -56,6 +56,14 @@ const ChatWindow = () => {
 
       const currentChat = selectedChatRef.current;
 
+      // Emit delivery confirmation
+      if (socket && newMessageReceived.sender._id !== user._id) {
+        socket.emit('message:delivered', {
+          messageId: newMessageReceived._id,
+          senderId: newMessageReceived.sender._id,
+        });
+      }
+
       if (!currentChat || currentChat._id !== newMessageReceived.chat._id) {
         setNotification((prev) => {
           if (prev.some(n => n._id === newMessageReceived._id)) {
@@ -79,8 +87,33 @@ const ChatWindow = () => {
           return updatedChats;
         });
       } else {
-        setMessages((prev) => [...prev, newMessageReceived]);
+        setMessages((prev) => [...prev, { ...newMessageReceived, status: 'delivered' }]);
+        // Emit read confirmation since we're viewing the chat
+        if (socket) {
+          socket.emit('message:read', {
+            messageIds: [newMessageReceived._id],
+            senderId: newMessageReceived.sender._id,
+            readerId: user._id,
+          });
+        }
       }
+    };
+
+    // Handle message status updates from sender perspective
+    const handleStatusUpdate = ({ messageId, status }) => {
+      setMessages((prev) =>
+        prev.map((m) =>
+          m._id === messageId ? { ...m, status } : m
+        )
+      );
+    };
+
+    const handleStatusUpdateBatch = ({ messageIds, status }) => {
+      setMessages((prev) =>
+        prev.map((m) =>
+          messageIds.includes(m._id) ? { ...m, status } : m
+        )
+      );
     };
 
     const handleAddedToGroup = (chat) => {
@@ -91,6 +124,8 @@ const ChatWindow = () => {
     socket.on("stop typing", handleStopTyping);
     socket.on("message received", handleMessageReceived);
     socket.on("added to group", handleAddedToGroup);
+    socket.on("message:status-update", handleStatusUpdate);
+    socket.on("message:status-update-batch", handleStatusUpdateBatch);
 
     // Update socket connected state based on context
     setSocketConnected(true);
@@ -100,6 +135,8 @@ const ChatWindow = () => {
       socket.off("stop typing", handleStopTyping);
       socket.off("message received", handleMessageReceived);
       socket.off("added to group", handleAddedToGroup);
+      socket.off("message:status-update", handleStatusUpdate);
+      socket.off("message:status-update-batch", handleStatusUpdateBatch);
     };
   }, [socket, setNotification, setChats]);
 
@@ -144,6 +181,38 @@ const ChatWindow = () => {
 
       if (socketRef.current) {
         socketRef.current.emit("join chat", selectedChat._id);
+      }
+
+      // Mark unread messages as read (from other users)
+      const unreadMessageIds = data
+        .filter(m => m.sender._id !== user._id && m.status !== 'read')
+        .map(m => m._id);
+
+      if (unreadMessageIds.length > 0) {
+        // Persist to database
+        axios.put('/api/message/read', {
+          messageIds: unreadMessageIds,
+          readerId: user._id
+        }).catch(err => console.error('Failed to mark as read:', err));
+
+        // Notify senders via socket
+        const senderIds = [...new Set(data
+          .filter(m => m.sender._id !== user._id && m.status !== 'read')
+          .map(m => m.sender._id))];
+
+        senderIds.forEach(senderId => {
+          const msgIdsForSender = data
+            .filter(m => m.sender._id === senderId && m.status !== 'read')
+            .map(m => m._id);
+
+          if (msgIdsForSender.length > 0 && socketRef.current) {
+            socketRef.current.emit('message:read', {
+              messageIds: msgIdsForSender,
+              senderId: senderId,
+              readerId: user._id,
+            });
+          }
+        });
       }
     } catch (error) {
       console.error("Failed to load messages", error);
@@ -543,9 +612,23 @@ const ChatWindow = () => {
               {/* Text content */}
               {m.content && <div className="message-text">{m.content}</div>}
 
-              <span className="message-time">
-                {new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              </span>
+              <div className="message-footer">
+                <span className="message-time">
+                  {new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
+                {/* Message status ticks - only for sent messages */}
+                {m.sender._id === user._id && (
+                  <span className={`message-status ${m.status || 'sent'}`}>
+                    {m.status === 'read' ? (
+                      <FontAwesomeIcon icon={faCheckDouble} />
+                    ) : m.status === 'delivered' ? (
+                      <FontAwesomeIcon icon={faCheckDouble} />
+                    ) : (
+                      <FontAwesomeIcon icon={faCheck} />
+                    )}
+                  </span>
+                )}
+              </div>
             </div>
           ))
         )}

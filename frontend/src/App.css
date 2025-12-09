@@ -75,6 +75,13 @@ body,
   background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
 }
 
+/* Mobile: add bottom padding for fixed nav bar */
+@media (max-width: 768px) {
+  .main-container {
+    padding-bottom: 65px;
+  }
+}
+
 /* --- AUTH PAGES (Login/Register) --- */
 .auth-container {
   display: flex;

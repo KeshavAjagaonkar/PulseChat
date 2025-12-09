@@ -9,14 +9,25 @@ const messageSchema = mongoose.Schema(
     // File attachment fields
     file: {
       url: { type: String },
-      downloadUrl: { type: String }, // Separate download URL for documents
+      downloadUrl: { type: String },
       type: { type: String, enum: ['image', 'video', 'document', null] },
       name: { type: String },
       size: { type: Number },
-    }
+    },
+    // Message status tracking
+    status: {
+      type: String,
+      enum: ['sent', 'delivered', 'read'],
+      default: 'sent'
+    },
+    // Track who has read the message (for group chats)
+    readBy: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }]
   },
   { timestamps: true }
 );
 
 const Message = mongoose.model("Message", messageSchema);
-export default Message; 
+export default Message;

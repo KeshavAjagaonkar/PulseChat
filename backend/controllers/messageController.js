@@ -100,4 +100,61 @@ const deleteMessage = async (req, res) => {
   }
 }
 
-export { sendMessage, allMessages, deleteMessage };
+// @desc    Update message status (delivered/read)
+// @route   PUT /api/message/status/:id
+const updateMessageStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    if (!['delivered', 'read'].includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+
+    const message = await Message.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+
+    if (!message) {
+      return res.status(404).json({ message: "Message not found" });
+    }
+
+    res.json(message);
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+};
+
+// @desc    Mark multiple messages as read
+// @route   PUT /api/message/read
+const markMessagesAsRead = async (req, res) => {
+  try {
+    const { messageIds, readerId } = req.body;
+
+    if (!messageIds || !Array.isArray(messageIds)) {
+      return res.status(400).json({ message: "Invalid messageIds" });
+    }
+
+    // Update all messages to read status and add reader to readBy array
+    await Message.updateMany(
+      {
+        _id: { $in: messageIds },
+        sender: { $ne: readerId }, // Don't update own messages
+        status: { $ne: 'read' } // Only update if not already read
+      },
+      {
+        $set: { status: 'read' },
+        $addToSet: { readBy: readerId }
+      }
+    );
+
+    res.json({ message: "Messages marked as read" });
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+};
+
+export { sendMessage, allMessages, deleteMessage, updateMessageStatus, markMessagesAsRead };

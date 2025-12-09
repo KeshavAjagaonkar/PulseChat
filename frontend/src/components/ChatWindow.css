@@ -125,6 +125,80 @@
   font-weight: 500;
 }
 
+/* Make emojis larger in chat messages */
+.message .message-content {
+  font-size: 15px;
+}
+
+/* If message is mostly emojis, make them bigger */
+.message {
+  font-size: 15px;
+}
+
+/* Emoji-specific sizing - makes emojis appear larger */
+.message-content,
+.message p,
+.message span {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Detect emoji-heavy messages and scale them up */
+.message {
+  line-height: 1.5;
+}
+
+/* Message Footer with time and status */
+.message-footer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  margin-top: 4px;
+  margin-left: auto;
+  font-size: 11px;
+}
+
+.message-time {
+  opacity: 0.7;
+  font-weight: 500;
+}
+
+/* Message Status Ticks */
+.message-status {
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 2px;
+}
+
+/* Single tick - sent (grey) */
+.message-status.sent {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Double tick - delivered (grey) */
+.message-status.delivered {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Double tick - read (blue) */
+.message-status.read {
+  color: #4fc3f7;
+}
+
+/* Light theme tick colors */
+[data-theme="light"] .message-status.sent {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="light"] .message-status.delivered {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="light"] .message-status.read {
+  color: #0288d1;
+}
+
 /* --- INPUT AREA --- */
 .chat-input-area {
   padding: 20px;

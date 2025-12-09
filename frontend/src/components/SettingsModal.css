@@ -475,30 +475,83 @@
 
 /* Responsive */
 @media (max-width: 600px) {
+    .settings-modal {
+        max-height: 90vh;
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+    }
+
     .settings-layout {
         flex-direction: column;
+        height: calc(90vh - 60px);
+        max-height: none;
     }
 
     .settings-nav {
         width: 100%;
+        min-width: 100%;
         flex-direction: row;
+        flex-wrap: nowrap;
         overflow-x: auto;
         border-right: none;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         padding: 8px;
+        gap: 4px;
+    }
+
+    /* Hide profile section in nav on mobile */
+    .settings-profile {
+        display: none;
+    }
+
+    .nav-divider {
+        display: none;
     }
 
     .settings-nav-item {
         flex-direction: column;
-        padding: 10px;
-        font-size: 12px;
+        padding: 8px 12px;
+        font-size: 11px;
         gap: 4px;
         min-width: fit-content;
+        flex-shrink: 0;
+    }
+
+    .settings-nav-item svg {
+        width: 16px;
     }
 
     .settings-nav-item.logout {
         margin-top: 0;
         margin-left: auto;
+    }
+
+    /* Improve content area on mobile */
+    .settings-content {
+        padding: 16px;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .settings-section h3 {
+        font-size: 16px;
+        margin-bottom: 16px;
+    }
+
+    .setting-row {
+        padding: 12px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .setting-info {
+        width: 100%;
+    }
+
+    .color-options {
+        flex-wrap: wrap;
     }
 }
 

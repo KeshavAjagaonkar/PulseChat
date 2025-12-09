@@ -1,10 +1,8 @@
 import React from 'react';
 import { ChatState } from '../context/ChatProvider';
-// Import the CSS where we defined .notification-dot and .unread-bold
 import '../components/SearchWindow.css';
 
 const ChatList = ({ results, isSearch, handleFunction, currentUser, loading }) => {
-  // 1. Get notification state from Context
   const { selectedChat, setSelectedChat, notification } = ChatState();
 
   // Show empty state message
@@ -35,23 +33,19 @@ const ChatList = ({ results, isSearch, handleFunction, currentUser, loading }) =
         let displayName = "";
         let displayPic = "";
 
-        // 2. LOGIC: Calculate unread notifications for this specific chat
-        // We filter the global notification array to find messages belonging to THIS chat
+        // Calculate unread notifications for this chat
         const unreadCount = !isSearch
           ? notification.filter(n => n.chat._id === chatOrUser._id).length
           : 0;
 
         if (isSearch) {
-          // It's a User Object (from search results)
           displayName = chatOrUser.name;
           displayPic = chatOrUser.pic;
         } else {
-          //It's a Chat Object (from /api/chat)
           if (chatOrUser.isGroupChat) {
             displayName = chatOrUser.chatName;
             displayPic = "https://cdn-icons-png.flaticon.com/512/166/166258.png";
           } else {
-            // 1-on-1 Logic
             if (currentUser && chatOrUser.users) {
               const otherUser = chatOrUser.users.find(u => u._id !== currentUser._id);
               displayName = otherUser ? otherUser.name : "User";
@@ -60,7 +54,7 @@ const ChatList = ({ results, isSearch, handleFunction, currentUser, loading }) =
           }
         }
 
-        // Get latest message preview for file attachments
+        // Get latest message preview - WhatsApp style
         const getLatestMessagePreview = () => {
           const msg = chatOrUser.latestMessage;
           if (!msg) return null;
@@ -74,14 +68,19 @@ const ChatList = ({ results, isSearch, handleFunction, currentUser, loading }) =
             );
           }
 
+          // WhatsApp-style file preview - clean icons
           if (msg.file) {
-            const fileIcon = msg.file.type === 'image' ? '🖼️'
-              : msg.file.type === 'video' ? '🎬'
-                : '📄';
-            return <span style={{ fontStyle: 'italic' }}>{fileIcon} {msg.file.type || 'File'}</span>;
+            const fileType = msg.file.type || 'document';
+            if (fileType === 'image') {
+              return <span className="file-preview">📷 Photo</span>;
+            } else if (fileType === 'video') {
+              return <span className="file-preview">🎬 Video</span>;
+            } else {
+              return <span className="file-preview">📎 Document</span>;
+            }
           }
 
-          return <span style={{ fontStyle: 'italic' }}>No message</span>;
+          return <span className="empty-preview">Start chatting</span>;
         };
 
         return (
@@ -99,7 +98,6 @@ const ChatList = ({ results, isSearch, handleFunction, currentUser, loading }) =
             <div className="user-avatar">
               <img src={displayPic} alt="av" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
 
-              {/* 3. RENDER: The Red Notification Dot */}
               {unreadCount > 0 && (
                 <div className="notification-dot">
                   {unreadCount > 9 ? '9+' : unreadCount}
@@ -111,9 +109,7 @@ const ChatList = ({ results, isSearch, handleFunction, currentUser, loading }) =
               <div className="user-name">{displayName}</div>
 
               {!isSearch && chatOrUser.latestMessage && (
-                // 4. STYLE: Apply bold style if unread
                 <div className={`user-status ${unreadCount > 0 ? 'unread-bold' : ''}`}>
-                  {/* If unread, add a "New:" prefix in blue */}
                   {unreadCount > 0 ? <span style={{ color: '#3b82f6', marginRight: '4px' }}>New:</span> : ''}
                   {getLatestMessagePreview()}
                 </div>

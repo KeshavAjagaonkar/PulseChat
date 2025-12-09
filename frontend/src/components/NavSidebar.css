@@ -97,8 +97,108 @@
   color: #ef4444;
 }
 
+/* ========================================
+   MOBILE RESPONSIVE - BOTTOM NAVIGATION BAR
+   ======================================== */
+
 @media (max-width: 768px) {
   .nav-sidebar {
+    /* Fixed bottom position */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+
+    /* Horizontal layout */
+    width: 100%;
+    min-width: 100%;
+    height: 65px;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 10px;
+
+    /* Bottom bar styling */
+    border-right: none;
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -2px 10px var(--shadow-color);
+
+    /* Ensure smooth backdrop */
+    backdrop-filter: blur(10px);
+  }
+
+
+  /* Dark theme bottom bar */
+  [data-theme="dark"] .nav-sidebar {
+    background-color: rgba(15, 15, 15, 0.95);
+  }
+
+  /* Light theme bottom bar */
+  [data-theme="light"] .nav-sidebar {
+    background-color: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Hide logo on mobile */
+  .app-logo {
     display: none;
+  }
+
+  /* Top section - takes space and distributes evenly */
+  .nav-top {
+    display: contents;
+    /* This makes children participate in parent flex layout */
+  }
+
+  /* Nav links - each item evenly spaced */
+  .nav-links {
+    display: contents;
+    /* Items participate in parent flex */
+  }
+
+  /* Bottom section - also distributes evenly */
+  .nav-bottom {
+    display: contents;
+    /* Items participate in parent flex */
+  }
+
+  /* Smaller nav items on mobile */
+  .nav-item {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    border-radius: 14px;
+  }
+
+  /* Hide logout button on mobile (can access from settings) */
+  .nav-item.logout-btn {
+    display: none;
+  }
+
+  /* Smaller profile icon */
+  .user-profile-icon {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .nav-sidebar {
+    height: 60px;
+    padding: 0 5px;
+  }
+
+  .nav-item {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+    border-radius: 12px;
+  }
+
+  .user-profile-icon {
+    width: 32px;
+    height: 32px;
   }
 }
