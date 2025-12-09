@@ -4,9 +4,20 @@
   min-width: 300px;
   display: flex;
   flex-direction: column;
-  background-color: rgba(15, 15, 15, 0.6);
+  background-color: var(--bg-glass);
   backdrop-filter: blur(15px);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid var(--border-color);
+}
+
+/* Dark theme */
+[data-theme="dark"] .sidebar {
+  background-color: rgba(15, 15, 15, 0.6);
+}
+
+/* Light theme */
+[data-theme="light"] .sidebar {
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
 }
 
 .sidebar-header {
@@ -16,39 +27,32 @@
   align-items: center;
   justify-content: center;
   padding: 0 20px;
-  /* Horizontal padding only */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border-color);
 }
 
 /* Search Input Styling */
 .search-input {
   width: 100%;
   height: 45px;
-  /* Fixed height for the input bar itself */
   padding: 0 15px;
-  /* Remove top/bottom padding, rely on height */
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
+  border: 1px solid var(--border-color);
+  background-color: var(--input-bg);
+  color: var(--text-primary);
   outline: none;
   transition: all 0.3s ease;
-
-  /* Text alignment inside input */
   display: flex;
   align-items: center;
 }
 
-/* Search Input - BRIGHTER NOW */
-
 .search-input:focus {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: var(--input-bg-focus);
   border-color: var(--accent-color);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .search-input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-secondary);
 }
 
 /* User List & Cards */
@@ -69,7 +73,27 @@
 }
 
 .user-card:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: var(--input-bg);
+}
+
+.user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.user-status {
+  color: var(--text-secondary);
+  font-size: 12px;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .user-avatar {
@@ -82,9 +106,7 @@
   flex-shrink: 0;
 }
 
-/* --- New Additions to SearchWindow.css --- */
-
-/* Add this block for the Online Dot */
+/* Online Dot */
 .online-dot {
   position: absolute;
   bottom: 0;
@@ -92,21 +114,17 @@
   width: 12px;
   height: 12px;
   background-color: #4CAF50;
-  /* A clear green color for 'Online' */
   border-radius: 50%;
-  border: 3px solid rgba(15, 15, 15, 0.9);
-  /* Border helps it stand out on dark background */
+  border: 3px solid var(--bg-base);
   box-shadow: 0 0 5px rgba(76, 175, 80, 0.8);
 }
 
-/* Add this block for the Active Card State */
+/* Active Card State */
 .user-card.active {
   background-color: var(--accent-color);
-  /* Use the accent color for selection */
   box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
 }
 
-/* Ensure text inside the active card is white and crisp */
 .user-card.active .user-name {
   color: white;
   font-weight: 600;
@@ -119,20 +137,25 @@
 
 @media (max-width: 768px) {
   .sidebar {
-    /* On mobile, it takes full width, allowing it to slide over the chat */
     width: 100%;
     min-width: 100%;
-    /* The blur is too heavy on full screen, let's slightly adjust the background */
+  }
+
+  [data-theme="dark"] .sidebar {
     background-color: rgba(15, 15, 15, 0.9);
+  }
+
+  [data-theme="light"] .sidebar {
+    background-color: rgba(255, 255, 255, 0.98);
   }
 }
 
+/* Notification Dot */
 .notification-dot {
   position: absolute;
   top: -4px;
   right: -4px;
   background-color: #3b82f6;
-  /* Blue for unread messages */
   color: white;
   font-size: 10px;
   font-weight: bold;
@@ -142,7 +165,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  border: 2px solid #1a1a1a;
+  border: 2px solid var(--bg-base);
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.5);
   padding: 2px;
   animation: pulse 2s infinite;
@@ -162,7 +185,14 @@
 
 .unread-bold {
   font-weight: 700 !important;
+}
+
+[data-theme="dark"] .unread-bold {
   color: white !important;
+}
+
+[data-theme="light"] .unread-bold {
+  color: #1a1a1a !important;
 }
 
 /* Unread chat card glow */

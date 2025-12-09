@@ -9,6 +9,7 @@ import userRoutes from './routes/userRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
 import messageRoutes from './routes/messageRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
+import callLogRoutes from './routes/callLogRoutes.js';
 import initSocket from './socket/socket.js';
 
 
@@ -30,6 +31,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/message', messageRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/calls', callLogRoutes);
 
 const PORT = process.env.PORT || 5000;
 

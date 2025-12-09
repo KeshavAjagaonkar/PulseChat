@@ -322,12 +322,20 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: all 0.2s;
+}
+
+.setting-row:hover {
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .setting-row:last-of-type {
-    border-bottom: none;
+    margin-bottom: 0;
 }
 
 .setting-info {
@@ -492,4 +500,100 @@
         margin-top: 0;
         margin-left: auto;
     }
+}
+
+/* ========================================
+   LIGHT THEME OVERRIDES
+   ======================================== */
+
+[data-theme="light"] .modal-overlay {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="light"] .modal-content {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .modal-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .modal-header h2 {
+    color: #1a1a1a;
+}
+
+[data-theme="light"] .close-btn {
+    color: #666666;
+}
+
+[data-theme="light"] .close-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #1a1a1a;
+}
+
+[data-theme="light"] .settings-nav {
+    background: #f5f5f5;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .settings-nav-item {
+    color: #666666;
+}
+
+[data-theme="light"] .settings-nav-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #1a1a1a;
+}
+
+[data-theme="light"] .settings-nav-item.active {
+    background: var(--accent-color);
+    color: white;
+}
+
+[data-theme="light"] .nav-divider {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .settings-section h3 {
+    color: #1a1a1a;
+}
+
+[data-theme="light"] .setting-row {
+    background: #f8f8f8;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .setting-row:hover {
+    background: #f0f0f0;
+}
+
+[data-theme="light"] .setting-label {
+    color: #1a1a1a;
+}
+
+[data-theme="light"] .setting-description {
+    color: #666666;
+}
+
+[data-theme="light"] .settings-select {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    color: #1a1a1a;
+}
+
+[data-theme="light"] .profile-name-input {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #1a1a1a;
+}
+
+[data-theme="light"] .profile-email {
+    color: #666666;
+}
+
+[data-theme="light"] .danger-zone {
+    background: rgba(239, 68, 68, 0.05);
+    border: 1px solid rgba(239, 68, 68, 0.2);
 }

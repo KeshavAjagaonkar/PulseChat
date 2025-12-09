@@ -70,8 +70,17 @@ const ChatList = ({ results, isSearch, handleFunction, currentUser }) => {
                   {/* If unread, add a "New:" prefix in blue */}
                   {unreadCount > 0 ? <span style={{ color: '#3b82f6', marginRight: '4px' }}>New:</span> : ''}
 
-                  {chatOrUser.latestMessage.content.substring(0, 30)}
-                  {chatOrUser.latestMessage.content.length > 30 && "..."}
+                  {/* Handle file-only messages or empty content */}
+                  {chatOrUser.latestMessage.content ? (
+                    <>
+                      {chatOrUser.latestMessage.content.substring(0, 30)}
+                      {chatOrUser.latestMessage.content.length > 30 && "..."}
+                    </>
+                  ) : chatOrUser.latestMessage.file ? (
+                    <span style={{ fontStyle: 'italic' }}>📎 File</span>
+                  ) : (
+                    <span style={{ fontStyle: 'italic' }}>No message</span>
+                  )}
                 </div>
               )}
             </div>

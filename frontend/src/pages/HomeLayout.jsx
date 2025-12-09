@@ -1,19 +1,29 @@
 import React from 'react';
-import NavSidebar from '../components/NavSidebar.jsx'; 
-import SearchWindow from '../components/SearchWindow.jsx'; 
+import NavSidebar from '../components/NavSidebar.jsx';
+import SearchWindow from '../components/SearchWindow.jsx';
 import ChatWindow from '../components/ChatWindow.jsx';
-import { ChatState } from '../context/ChatProvider'; // 1. Import Context
+import CallModal from '../components/CallModal.jsx';
+import { ChatState } from '../context/ChatProvider';
+import { SocketProvider } from '../context/SocketContext';
+import { CallProvider } from '../context/CallContext';
 
 const HomeLayout = () => {
-  const { selectedChat } = ChatState(); // 2. Get selectedChat state
+  const { selectedChat } = ChatState();
 
   return (
-    // 3. Add a conditional class 'chat-selected' if a chat is active
-    <div className={`main-container ${selectedChat ? 'chat-selected' : ''}`}> 
-      <NavSidebar /> 
-      <SearchWindow />
-      <ChatWindow />
-    </div>
+    <SocketProvider>
+      <CallProvider>
+        {/* Main Chat Container */}
+        <div className={`main-container ${selectedChat ? 'chat-selected' : ''}`}>
+          <NavSidebar />
+          <SearchWindow />
+          <ChatWindow />
+        </div>
+
+        {/* Call Modal - Always rendered, shows when call is active */}
+        <CallModal />
+      </CallProvider>
+    </SocketProvider>
   );
 };
 

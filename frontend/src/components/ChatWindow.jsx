@@ -6,10 +6,11 @@ import MessageMenu from './MessageMenu';
 import TypingIndicator from './TypingIndicator';
 import GroupInfoModal from './GroupInfoModal';
 import { ChatState } from '../context/ChatProvider';
+import { useSocket } from '../context/SocketContext';
+import { useCall } from '../context/CallContext';
 import axios from 'axios';
-import io from 'socket.io-client';
-
-const ENDPOINT = "http://localhost:5000";
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
 
 const ChatWindow = () => {
   const [messages, setMessages] = useState([]);
@@ -20,8 +21,11 @@ const ChatWindow = () => {
   const [replyTo, setReplyTo] = useState(null);
   const [showGroupInfo, setShowGroupInfo] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-  const { user, selectedChat, setSelectedChat, chats, setChats, notification, setNotification, onlineUsers, setOnlineUsers } = ChatState();
+  const { user, selectedChat, setSelectedChat, chats, setChats, notification, setNotification, onlineUsers } = ChatState();
+  const { socket, isConnected } = useSocket();
+  const { startCall } = useCall();
 
   // Refs
   const socketRef = useRef(null);
@@ -37,28 +41,17 @@ const ChatWindow = () => {
     selectedChatRef.current = selectedChat;
   }, [selectedChat]);
 
-  // Socket initialization
+  // Socket initialization - use shared socket from context
   useEffect(() => {
-    if (!user) return;
+    if (!socket) return;
 
-    const socket = io(ENDPOINT);
+    // Store socket ref for other hooks to use
     socketRef.current = socket;
 
-    socket.emit("setup", user);
+    const handleTyping = () => setIsTyping(true);
+    const handleStopTyping = () => setIsTyping(false);
 
-    socket.on("connected", () => {
-      console.log("Socket connected!");
-      setSocketConnected(true);
-    });
-
-    socket.on("typing", () => setIsTyping(true));
-    socket.on("stop typing", () => setIsTyping(false));
-
-    socket.on("online users", (users) => {
-      setOnlineUsers(users);
-    });
-
-    socket.on("message received", (newMessageReceived) => {
+    const handleMessageReceived = (newMessageReceived) => {
       console.log("Message received:", newMessageReceived);
 
       const currentChat = selectedChatRef.current;
@@ -88,18 +81,27 @@ const ChatWindow = () => {
       } else {
         setMessages((prev) => [...prev, newMessageReceived]);
       }
-    });
+    };
 
-    socket.on("added to group", (chat) => {
+    const handleAddedToGroup = (chat) => {
       setChats((prev) => [chat, ...prev]);
-    });
+    };
+
+    socket.on("typing", handleTyping);
+    socket.on("stop typing", handleStopTyping);
+    socket.on("message received", handleMessageReceived);
+    socket.on("added to group", handleAddedToGroup);
+
+    // Update socket connected state based on context
+    setSocketConnected(true);
 
     return () => {
-      console.log("Disconnecting socket...");
-      socket.disconnect();
-      socketRef.current = null;
+      socket.off("typing", handleTyping);
+      socket.off("stop typing", handleStopTyping);
+      socket.off("message received", handleMessageReceived);
+      socket.off("added to group", handleAddedToGroup);
     };
-  }, [user, setOnlineUsers, setNotification, setChats]);
+  }, [socket, setNotification, setChats]);
 
   // Fetch messages when chat changes
   useEffect(() => {
@@ -187,6 +189,7 @@ const ChatWindow = () => {
         chatId: selectedChat._id,
         file: {
           url: uploadData.url,
+          downloadUrl: uploadData.downloadUrl || uploadData.url,
           type: uploadData.type,
           name: uploadData.name,
           size: uploadData.size,
@@ -364,34 +367,41 @@ const ChatWindow = () => {
       );
     }
 
-    // Document - Add fl_attachment to Cloudinary URL for proper download
-    const getDownloadUrl = (url) => {
-      // For Cloudinary URLs, add fl_attachment flag
-      if (url.includes('cloudinary.com')) {
-        // Insert fl_attachment before the file path
-        return url.replace('/upload/', '/upload/fl_attachment/');
-      }
-      return url;
-    };
+    // Document - Use downloadUrl from backend if available
+    // The backend generates this with fl_attachment flag for proper downloads
+    const downloadUrl = file.downloadUrl || file.url;
 
-    const downloadUrl = getDownloadUrl(file.url);
+    // Function to handle download with proper content disposition
+    const handleDownload = async (e) => {
+      e.preventDefault();
+
+      try {
+        // Fetch the file as blob to force proper download
+        const response = await fetch(downloadUrl);
+        const blob = await response.blob();
+
+        // Create blob URL and trigger download
+        const blobUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = file.name || 'document';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(blobUrl);
+      } catch (error) {
+        console.error('Download error:', error);
+        // Fallback: open in new tab
+        window.open(downloadUrl, '_blank');
+      }
+    };
 
     return (
       <a
         href={downloadUrl}
         download={file.name}
         className="message-document"
-        onClick={(e) => {
-          e.preventDefault();
-          // Create a temporary link to force download
-          const link = document.createElement('a');
-          link.href = downloadUrl;
-          link.download = file.name || 'document';
-          link.target = '_blank';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }}
+        onClick={handleDownload}
       >
         <FontAwesomeIcon icon={faFileAlt} className="doc-icon" />
         <div className="doc-info">
@@ -435,12 +445,31 @@ const ChatWindow = () => {
           )}
         </div>
         <div className="chat-actions">
-          <button className="icon-btn" title="Voice Call (Coming Soon)">
-            <FontAwesomeIcon icon={faPhone} />
-          </button>
-          <button className="icon-btn" title="Video Call (Coming Soon)">
-            <FontAwesomeIcon icon={faVideo} />
-          </button>
+          {/* Only show call buttons for 1-on-1 chats */}
+          {!selectedChat.isGroupChat && (
+            <>
+              <button
+                className="icon-btn"
+                title="Voice Call"
+                onClick={() => {
+                  const otherUser = selectedChat.users.find(u => u._id !== user._id);
+                  if (otherUser) startCall(otherUser, 'audio');
+                }}
+              >
+                <FontAwesomeIcon icon={faPhone} />
+              </button>
+              <button
+                className="icon-btn"
+                title="Video Call"
+                onClick={() => {
+                  const otherUser = selectedChat.users.find(u => u._id !== user._id);
+                  if (otherUser) startCall(otherUser, 'video');
+                }}
+              >
+                <FontAwesomeIcon icon={faVideo} />
+              </button>
+            </>
+          )}
           <button
             className="icon-btn"
             title={selectedChat.isGroupChat ? "Group Info" : "Chat Info"}
@@ -542,6 +571,32 @@ const ChatWindow = () => {
           >
             <FontAwesomeIcon icon={faPaperclip} />
           </button>
+
+          {/* Emoji Picker */}
+          <div className="emoji-picker-container">
+            <button
+              className={`icon-btn ${showEmojiPicker ? 'active' : ''}`}
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              title="Emoji"
+            >
+              <FontAwesomeIcon icon={faSmile} />
+            </button>
+            {showEmojiPicker && (
+              <div className="emoji-picker-popup">
+                <Picker
+                  data={data}
+                  onEmojiSelect={(emoji) => {
+                    setNewMessage(prev => prev + emoji.native);
+                    setShowEmojiPicker(false);
+                  }}
+                  theme={document.documentElement.getAttribute('data-theme') || 'dark'}
+                  previewPosition="none"
+                  skinTonePosition="none"
+                />
+              </div>
+            )}
+          </div>
+
           <input
             type="text"
             placeholder="Type a message..."
@@ -549,7 +604,6 @@ const ChatWindow = () => {
             onChange={typingHandler}
             onKeyDown={(e) => { if (e.key === 'Enter') sendMessage(); }}
           />
-          <button className="icon-btn"><FontAwesomeIcon icon={faSmile} /></button>
           <button
             className="icon-btn send-btn"
             onClick={sendMessage}

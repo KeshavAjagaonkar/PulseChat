@@ -28,12 +28,20 @@ const App = () => {
     if (savedSettings) {
       try {
         const settings = JSON.parse(savedSettings);
+        // Apply accent color
         if (settings.accentColor) {
           document.documentElement.style.setProperty('--accent-color', settings.accentColor);
+        }
+        // Apply theme (dark/light)
+        if (settings.theme) {
+          document.documentElement.setAttribute('data-theme', settings.theme);
         }
       } catch (e) {
         console.error('Error loading settings:', e);
       }
+    } else {
+      // Default to dark theme
+      document.documentElement.setAttribute('data-theme', 'dark');
     }
 
     // Listen for storage changes (e.g., logout from another tab)

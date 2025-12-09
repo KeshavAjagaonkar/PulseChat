@@ -3,6 +3,9 @@ import { Server } from "socket.io";
 // Track online users: { odId: socketId }
 const onlineUsers = new Map();
 
+// Track active calls: { odId: { peerId, callType } }
+const activeCalls = new Map();
+
 const initSocket = (server) => {
   const io = new Server(server, {
     pingTimeout: 60000,
@@ -76,11 +79,111 @@ const initSocket = (server) => {
       socket.in(userId).emit("added to group", chat);
     });
 
-    // F. DISCONNECT: User closes browser/tab
+    // ============================================
+    // F. WEBRTC CALLING SIGNALING
+    // ============================================
+
+    // F1. Initiate a call (includes offer)
+    socket.on("call:initiate", ({ calleeId, callerInfo, callType, offer }) => {
+      console.log(`Call initiated: ${callerInfo.name} -> ${calleeId} (${callType})`);
+
+      // Check if callee is online
+      const calleeSocketId = onlineUsers.get(calleeId);
+      if (!calleeSocketId) {
+        socket.emit("call:user-offline", { calleeId });
+        return;
+      }
+
+      // Check if callee is already in a call
+      if (activeCalls.has(calleeId)) {
+        socket.emit("call:user-busy", { calleeId });
+        return;
+      }
+
+      // Store caller as in active call
+      if (socket.userData) {
+        activeCalls.set(socket.userData._id, { peerId: calleeId, callType });
+      }
+
+      // Send incoming call to callee WITH the offer
+      io.to(calleeId).emit("call:incoming", {
+        callerId: socket.userData._id,
+        callerInfo: callerInfo,
+        callType: callType,
+        offer: offer, // Include the WebRTC offer
+      });
+    });
+
+    // F2. Answer a call (callee sends answer to caller)
+    socket.on("call:answer", ({ callerId, answer }) => {
+      console.log(`Call answered by ${socket.userData?._id}`);
+
+      // Mark callee as in active call
+      if (socket.userData) {
+        activeCalls.set(socket.userData._id, { peerId: callerId, callType: 'active' });
+      }
+
+      // Forward answer to caller
+      io.to(callerId).emit("call:answer", {
+        calleeId: socket.userData._id,
+        answer: answer,
+      });
+    });
+
+    // F3. Reject a call
+    socket.on("call:reject", ({ callerId }) => {
+      console.log(`Call rejected by ${socket.userData?._id}`);
+
+      // Remove caller from active calls
+      activeCalls.delete(callerId);
+
+      // Notify caller that call was rejected
+      io.to(callerId).emit("call:rejected", {
+        calleeId: socket.userData._id,
+      });
+    });
+
+    // F4. End a call
+    socket.on("call:end", ({ peerId }) => {
+      console.log(`Call ended by ${socket.userData?._id}`);
+
+      // Remove both parties from active calls
+      if (socket.userData) {
+        activeCalls.delete(socket.userData._id);
+      }
+      activeCalls.delete(peerId);
+
+      // Notify peer that call ended
+      io.to(peerId).emit("call:ended", {
+        endedBy: socket.userData?._id,
+      });
+    });
+
+    // F5. ICE Candidate exchange
+    socket.on("webrtc:ice-candidate", ({ peerId, candidate }) => {
+      io.to(peerId).emit("webrtc:ice-candidate", {
+        senderId: socket.userData?._id,
+        candidate: candidate,
+      });
+    });
+
+    // ============================================
+    // G. DISCONNECT: User closes browser/tab
+    // ============================================
     socket.on("disconnect", () => {
       console.log("User disconnected:", socket.id);
 
       if (socket.userData && socket.userData._id) {
+        // End any active call
+        const activeCall = activeCalls.get(socket.userData._id);
+        if (activeCall) {
+          io.to(activeCall.peerId).emit("call:ended", {
+            endedBy: socket.userData._id,
+            reason: "disconnected",
+          });
+          activeCalls.delete(socket.userData._id);
+        }
+
         // Remove from online users
         onlineUsers.delete(socket.userData._id);
         socket.leave(socket.userData._id);

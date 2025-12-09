@@ -246,10 +246,14 @@ const SettingsModal = ({ onClose }) => {
                                     <select
                                         className="settings-select"
                                         value={settings.theme}
-                                        onChange={(e) => updateSetting('theme', e.target.value)}
+                                        onChange={(e) => {
+                                            updateSetting('theme', e.target.value);
+                                            // Apply theme immediately
+                                            document.documentElement.setAttribute('data-theme', e.target.value);
+                                        }}
                                     >
                                         <option value="dark">Dark</option>
-                                        <option value="light" disabled>Light (Coming Soon)</option>
+                                        <option value="light">Light</option>
                                     </select>
                                 </div>
 

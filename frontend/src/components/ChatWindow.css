@@ -228,15 +228,40 @@
   }
 }
 
-.chat-header .icon-btn:first-child {
+/* Hide back button on Desktop (it's the direct child of chat-header, not in chat-actions) */
+.chat-header>.icon-btn:first-child {
   display: none;
 }
 
 /* Show back button on Mobile */
 @media (max-width: 768px) {
-  .chat-header .icon-btn:first-child {
+  .chat-header>.icon-btn:first-child {
     display: flex;
     margin-right: 10px;
+  }
+
+  /* Fix header padding and button sizing on mobile */
+  .chat-header {
+    padding: 0 12px;
+  }
+
+  .chat-header-info h3 {
+    font-size: 14px;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Ensure all call buttons are visible on mobile */
+  .chat-actions {
+    gap: 4px;
+  }
+
+  .chat-actions .icon-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
   }
 }
 
@@ -474,4 +499,155 @@
 .message.received .message-sender+.message-video,
 .message.received .message-sender+.message-document {
   margin-top: 4px;
+}
+
+/* ========================================
+   LIGHT THEME OVERRIDES
+   ======================================== */
+
+/* Chat Header - Light Theme */
+[data-theme="light"] .chat-header {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .chat-header-info h3 {
+  color: #1a1a1a;
+}
+
+/* Messages Container - Light Theme */
+[data-theme="light"] .messages-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* Message Bubbles - Light Theme */
+[data-theme="light"] .message.received {
+  background-color: #ffffff;
+  color: #1a1a1a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .message.sent {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+[data-theme="light"] .message-time {
+  color: inherit;
+  opacity: 0.5;
+}
+
+/* Input Area - Light Theme */
+[data-theme="light"] .chat-input-area {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .chat-input-area input {
+  background-color: #f0f0f0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #1a1a1a;
+}
+
+[data-theme="light"] .chat-input-area input::placeholder {
+  color: #888888;
+}
+
+[data-theme="light"] .chat-input-area input:focus {
+  background-color: #e8e8e8;
+  border-color: var(--accent-color);
+}
+
+/* Icon Buttons - Light Theme */
+[data-theme="light"] .icon-btn {
+  color: #666666;
+}
+
+[data-theme="light"] .icon-btn:hover {
+  color: #1a1a1a;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Input Wrapper - Light Theme */
+[data-theme="light"] .chat-input-area-wrapper {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Typing Indicator - Light Theme */
+[data-theme="light"] .typing-indicator-banner {
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #666666;
+}
+
+/* Reply Preview - Light Theme */
+[data-theme="light"] .reply-preview-banner {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-left-color: var(--accent-color);
+}
+
+[data-theme="light"] .reply-preview-banner strong {
+  color: var(--accent-color);
+}
+
+[data-theme="light"] .reply-preview-banner span {
+  color: #666666;
+}
+
+/* Sender Name - Light Theme */
+[data-theme="light"] .sender-name {
+  color: var(--accent-color);
+}
+
+/* Document Attachment - Light Theme */
+[data-theme="light"] .message.received .message-document {
+  background-color: #f5f5f5;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .message.received .doc-name,
+[data-theme="light"] .message.received .doc-size {
+  color: #1a1a1a;
+}
+
+/* Upload Progress - Light Theme */
+[data-theme="light"] .upload-progress {
+  background: rgba(59, 130, 246, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   EMOJI PICKER STYLES
+   ======================================== */
+
+.emoji-picker-container {
+  position: relative;
+}
+
+.emoji-picker-popup {
+  position: absolute;
+  bottom: 60px;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Override emoji-mart theme for dark mode */
+.emoji-picker-popup em-emoji-picker {
+  --em-rgb-background: 30, 30, 30;
+  --border-radius: 12px;
+}
+
+/* Light theme emoji picker */
+[data-theme="light"] .emoji-picker-popup em-emoji-picker {
+  --em-rgb-background: 255, 255, 255;
+}
+
+/* Active state for emoji button */
+.icon-btn.active {
+  color: var(--accent-color);
+  background-color: rgba(59, 130, 246, 0.15);
 }

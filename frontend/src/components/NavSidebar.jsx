@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import './NavSidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMessage, faUserGroup, faCog, faVideo, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faMessage, faUserGroup, faCog, faPhone, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { ChatState } from '../context/ChatProvider';
-import CreateGroupModal from './CreateGroupModal';
+import GroupsModal from './GroupsModal';
 import SettingsModal from './SettingsModal';
+import CallLogsModal from './CallLogsModal';
 
 function NavSidebar() {
-  const [showCreateGroup, setShowCreateGroup] = useState(false);
+  const [showGroups, setShowGroups] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showCallLogs, setShowCallLogs] = useState(false);
   const { user, setUser, setSelectedChat, setChats } = ChatState();
   const navigate = useNavigate();
 
@@ -35,18 +37,22 @@ function NavSidebar() {
               <FontAwesomeIcon icon={faMessage} />
             </div>
 
-            {/* Create Group */}
+            {/* Groups */}
             <div
               className="nav-item"
-              title="Create Group"
-              onClick={() => setShowCreateGroup(true)}
+              title="Groups"
+              onClick={() => setShowGroups(true)}
             >
               <FontAwesomeIcon icon={faUserGroup} />
             </div>
 
-            {/* Calls/Video (Future proofing) */}
-            <div className="nav-item" title="Calls (Coming Soon)">
-              <FontAwesomeIcon icon={faVideo} />
+            {/* Call Logs */}
+            <div
+              className="nav-item"
+              title="Call History"
+              onClick={() => setShowCallLogs(true)}
+            >
+              <FontAwesomeIcon icon={faPhone} />
             </div>
           </div>
         </div>
@@ -88,14 +94,19 @@ function NavSidebar() {
         </div>
       </div>
 
-      {/* Create Group Modal */}
-      {showCreateGroup && (
-        <CreateGroupModal onClose={() => setShowCreateGroup(false)} />
+      {/* Groups Modal */}
+      {showGroups && (
+        <GroupsModal onClose={() => setShowGroups(false)} />
       )}
 
       {/* Settings Modal */}
       {showSettings && (
         <SettingsModal onClose={() => setShowSettings(false)} />
+      )}
+
+      {/* Call Logs Modal */}
+      {showCallLogs && (
+        <CallLogsModal onClose={() => setShowCallLogs(false)} />
       )}
     </>
   );

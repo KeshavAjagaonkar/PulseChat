@@ -1,0 +1,191 @@
+/* Call Logs Modal */
+.call-logs-modal {
+    max-width: 500px;
+    width: 95%;
+    max-height: 85vh;
+    padding: 0;
+    overflow: hidden;
+}
+
+.call-logs-modal .modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.call-logs-list {
+    padding: 16px;
+    max-height: calc(85vh - 100px);
+    overflow-y: auto;
+}
+
+.call-logs-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.call-logs-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+}
+
+/* Loading & Empty States */
+.loading-state,
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 8px 0;
+}
+
+.empty-state span {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+/* Call Log Item */
+.call-log-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+}
+
+.call-log-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.call-log-item:last-child {
+    margin-bottom: 0;
+}
+
+.call-log-item.missed,
+.call-log-item.rejected {
+    border-left: 3px solid #ef4444;
+}
+
+.call-log-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.call-log-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.call-log-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.call-log-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.call-log-details {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.status-icon {
+    font-size: 12px;
+}
+
+.status-icon.outgoing {
+    color: #22c55e;
+}
+
+.status-icon.incoming {
+    color: var(--accent-color);
+}
+
+.status-icon.missed,
+.status-icon.rejected {
+    color: #ef4444;
+}
+
+.call-direction {
+    color: var(--text-secondary);
+}
+
+.call-type-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: capitalize;
+}
+
+.call-log-meta {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.call-time {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.call-duration {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+/* ========================================
+   LIGHT THEME OVERRIDES
+   ======================================== */
+
+[data-theme="light"] .call-logs-modal .modal-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .call-logs-list::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .call-log-item {
+    background: #f5f5f5;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .call-log-item:hover {
+    background: #e8e8e8;
+}
+
+[data-theme="light"] .call-type-badge {
+    background: rgba(0, 0, 0, 0.08);
+}
